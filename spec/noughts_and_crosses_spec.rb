@@ -12,13 +12,11 @@ module NoughtsAndCrosses
     end
 
     def place_nought_at(location)
-      raise RuleViolationError if !moves.empty? && moves.last[1] == "0"
-      moves << [location, "0"]
+      place("0", location)
     end
 
     def place_cross_at(location)
-      raise RuleViolationError if !moves.empty? && moves.last[1] == "X"
-      moves << [location, "X"]
+      place("X", location)
     end
 
     def print_grid
@@ -28,6 +26,12 @@ module NoughtsAndCrosses
     end
 
     private
+
+    def place(mark, location)
+      raise CellOccupiedError  if moves.any? {|move| move.first == location }
+      raise RuleViolationError if !moves.empty? && moves.last[1] == mark
+      moves << [location, mark]
+    end
 
     def _print_grid
       moves_and_marks = moves.to_h
@@ -40,6 +44,7 @@ module NoughtsAndCrosses
   end
 
   class RuleViolationError < StandardError; end
+  class CellOccupiedError < RuleViolationError; end
 end
 
 
@@ -75,19 +80,27 @@ module NoughtsAndCrosses
       )
     end
 
-    it "doesn't allow two 0s to be placed consecutively" do
-      game = Game.new
-      game.place_nought_at(:middle)
+    describe "rule violations" do
+      it "doesn't allow two 0s to be placed consecutively" do
+        game = Game.new
+        game.place_nought_at(:middle)
 
-      expect { game.place_nought_at(:top_right) }.to raise_error(RuleViolationError)
-    end
+        expect { game.place_nought_at(:top_right) }.to raise_error(RuleViolationError)
+      end
 
-    it "doesn't allow two crosses to be placed consecutively" do
-      game = Game.new
-      game.place_cross_at(:middle)
+      it "doesn't allow two crosses to be placed consecutively" do
+        game = Game.new
+        game.place_cross_at(:middle)
 
-      expect { game.place_cross_at(:middle) }.to raise_error(RuleViolationError)
+        expect { game.place_cross_at(:middle) }.to raise_error(RuleViolationError)
+      end
+
+      it "doesn't allow you to place in an occupied location" do
+        game = Game.new
+        game.place_cross_at(:middle)
+
+        expect { game.place_nought_at(:middle) }.to raise_error(CellOccupiedError)
+      end
     end
   end
-
 end
