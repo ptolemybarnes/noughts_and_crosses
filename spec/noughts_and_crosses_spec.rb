@@ -1,60 +1,10 @@
-module NoughtsAndCrosses
-
-  class Game
-
-    LOCATIONS = [
-      :top_left, :top_middle, :top_right, :middle_left, :middle, :middle_right,
-      :bottom_left, :bottom_middle, :bottom_right
-    ]
-
-    def initialize
-      @moves = []
-    end
-
-    def place_nought_at(location)
-      place("0", location)
-    end
-
-    def place_cross_at(location)
-      place("X", location)
-    end
-
-    def print_grid
-        "-----\n|" +
-        _print_grid +
-        "|\n-----\n"
-    end
-
-    private
-
-    def place(mark, location)
-      raise YouCantGoThereError if !LOCATIONS.include? location
-      raise YouCantGoThereError  if moves.any? {|move| move.first == location }
-      raise NotYourTurnError if !moves.empty? && moves.last[1] == mark
-      moves << [location, mark]
-    end
-
-    def _print_grid
-      moves_and_marks = moves.to_h
-      LOCATIONS.map do |location|
-        moves_and_marks.fetch(location, " ")
-      end.each_slice(3).to_a.map(&:join).join("|\n|")
-    end
-
-    attr_reader :moves
-  end
-
-  class RuleViolationError < StandardError; end
-  class YouCantGoThereError < RuleViolationError; end
-  class NotYourTurnError < RuleViolationError; end
-end
-
+require './lib/game'
+require 'pry'
 
 module NoughtsAndCrosses
-
   describe Game do
-
     let(:game) { Game.new }
+
     it 'placing a 0 on the grid' do
       game.place_nought_at(:middle)
 
@@ -80,6 +30,30 @@ module NoughtsAndCrosses
         -----
       EXAMPLE
       )
+    end
+
+    it 'a game is not over unless a player has 3 in a row' do
+      expect(game).not_to be_over
+    end
+
+    it 'the game is over when there are 3 noughts horizontally' do
+      game.place_nought_at(:middle_left)
+      game.place_cross_at(:top_left)
+      game.place_nought_at(:middle)
+      game.place_cross_at(:top_middle)
+      game.place_nought_at(:middle_right)
+
+      expect(game).to be_over
+    end
+
+    it 'the game is over when there are 3 crosses vertically' do
+      game.place_cross_at(:bottom_left)
+      game.place_nought_at(:bottom_middle)
+      game.place_cross_at(:middle_left)
+      game.place_nought_at(:middle)
+      game.place_cross_at(:top_left)
+
+      expect(game).to be_over
     end
 
     describe "rule violations" do
