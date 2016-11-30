@@ -17,6 +17,7 @@ module NoughtsAndCrosses
     end
 
     def place_cross_at(location)
+      raise RuleViolationError if !moves.empty? && moves.last[1] == "X"
       moves << [location, "X"]
     end
 
@@ -79,6 +80,13 @@ module NoughtsAndCrosses
       game.place_nought_at(:middle)
 
       expect { game.place_nought_at(:top_right) }.to raise_error(RuleViolationError)
+    end
+
+    it "doesn't allow two crosses to be placed consecutively" do
+      game = Game.new
+      game.place_cross_at(:middle)
+
+      expect { game.place_cross_at(:middle) }.to raise_error(RuleViolationError)
     end
   end
 
