@@ -1,6 +1,5 @@
 module NoughtsAndCrosses
   class Game
-
     LOCATIONS = [
       :top_left, :top_middle, :top_right, :middle_left, :middle, :middle_right,
       :bottom_left, :bottom_middle, :bottom_right
@@ -26,22 +25,21 @@ module NoughtsAndCrosses
 
     def over?
       moves_and_marks = moves.to_h
-      rows_array = LOCATIONS.map do |location|
-        moves_and_marks.fetch(location, nil)
-      end.each_slice(3).to_a
-      # check rows
-      rows_outcome = rows_array.any? do |row|
-        row = row.compact
-        row.length == 3 && row.uniq.one?
-      end
-      return rows_outcome if rows_outcome
+      rows = LOCATIONS.map do |location|
+        moves_and_marks[location]
+      end.each_slice(3)
+      three_consecutive_marks?(rows) || three_consecutive_marks?(rotate(rows))
+    end
 
-      # check columns
-      columns_array = rows_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
-      columns_array.any? do |row|
+    def three_consecutive_marks?(rows)
+      rows.any? do |row|
         row = row.compact
         row.length == 3 && row.uniq.one?
       end
+    end
+
+    def rotate(two_dimensional_array)
+      two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
     end
 
     private
@@ -57,7 +55,7 @@ module NoughtsAndCrosses
       moves_and_marks = moves.to_h
       LOCATIONS.map do |location|
         moves_and_marks.fetch(location, " ")
-      end.each_slice(3).to_a.map(&:join).join("|\n|")
+      end.each_slice(3).map(&:join).join("|\n|")
     end
 
     attr_reader :moves
