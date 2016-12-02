@@ -43,26 +43,39 @@ module NoughtsAndCrosses
       )
     end
 
-    it 'a game is not over unless a player has 3 in a row' do
-      expect(game).not_to be_over
+    describe 'Game Over!' do
+
+      it 'is not over unless a player has 3 in a row' do
+        expect(game).not_to be_over
+      end
+
+      it 'is over when there are 3 noughts horizontally' do
+        game.place_nought_at(*MIDDLE)
+        game.place_cross_at(*BOTTOM_MIDDLE)
+        game.place_nought_at(*MIDDLE_LEFT)
+        game.place_cross_at(*BOTTOM_RIGHT)
+        game.place_nought_at(*MIDDLE_RIGHT)
+
+        expect(game).to be_over
+      end
+
+      it 'is over when there are 3 crosses vertically' do
+        game.place_cross_at(*BOTTOM_LEFT)
+        game.place_nought_at(*BOTTOM_MIDDLE)
+        game.place_cross_at(*MIDDLE_LEFT)
+        game.place_nought_at(*MIDDLE)
+        game.place_cross_at(*TOP_LEFT)
+
+        expect(game).to be_over
+      end
     end
 
-    it 'the game is over when there are 3 noughts horizontally' do
-      game.place_nought_at(*MIDDLE)
-      game.place_cross_at(*BOTTOM_MIDDLE)
-      game.place_nought_at(*MIDDLE_LEFT)
-      game.place_cross_at(*BOTTOM_RIGHT)
-      game.place_nought_at(*MIDDLE_RIGHT)
-
-      expect(game).to be_over
-    end
-
-    it 'the game is over when there are 3 crosses vertically' do
+    it 'is over when there are 3 noughts diagonally' do
       game.place_cross_at(*BOTTOM_LEFT)
       game.place_nought_at(*BOTTOM_MIDDLE)
-      game.place_cross_at(*MIDDLE_LEFT)
-      game.place_nought_at(*MIDDLE)
-      game.place_cross_at(*TOP_LEFT)
+      game.place_cross_at(*MIDDLE)
+      game.place_nought_at(*BOTTOM_RIGHT)
+      game.place_cross_at(*TOP_RIGHT)
 
       expect(game).to be_over
     end

@@ -39,7 +39,8 @@ module NoughtsAndCrosses
       rows = LOCATIONS.map do |location|
         moves_and_marks[location]
       end.each_slice(3)
-      three_consecutive_marks?(rows) || three_consecutive_marks?(rotate(rows))
+      forward_slash_diagonal = rows.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
+      three_consecutive_marks?(rows) || three_consecutive_marks?(rotate(rows)) || forward_slash_diagonal.length == 3 && forward_slash_diagonal.uniq.one?
     end
 
     def three_consecutive_marks?(rows)
