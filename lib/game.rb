@@ -34,20 +34,18 @@ module NoughtsAndCrosses
         "|\n-----\n"
     end
 
+    LineOfThree = proc do |row|
+      row = row.compact
+      row.length == 3 && row.uniq.one?
+    end
+
     def over?
       moves_and_marks = moves.to_h
       rows = LOCATIONS.map do |location|
         moves_and_marks[location]
       end.each_slice(3)
       forward_slash_diagonal = rows.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
-      three_consecutive_marks?(rows) || three_consecutive_marks?(rotate(rows)) || forward_slash_diagonal.length == 3 && forward_slash_diagonal.uniq.one?
-    end
-
-    def three_consecutive_marks?(rows)
-      rows.any? do |row|
-        row = row.compact
-        row.length == 3 && row.uniq.one?
-      end
+      (rows.any? &LineOfThree) || (rotate(rows).any? &LineOfThree) || LineOfThree.(forward_slash_diagonal)
     end
 
     def rotate(two_dimensional_array)
