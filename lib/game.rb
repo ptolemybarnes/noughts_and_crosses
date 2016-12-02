@@ -1,20 +1,31 @@
 module NoughtsAndCrosses
+  class Point < Struct.new(:x, :y)
+  end
+
+  LOCATIONS = [
+    Point.new(0, 2),
+    Point.new(1, 2),
+    Point.new(2, 2),
+    Point.new(0, 1),
+    Point.new(1, 1),
+    Point.new(2, 1),
+    Point.new(0, 0),
+    Point.new(1, 0),
+    Point.new(2, 0)
+  ]
+
   class Game
-    LOCATIONS = [
-      :top_left, :top_middle, :top_right, :middle_left, :middle, :middle_right,
-      :bottom_left, :bottom_middle, :bottom_right
-    ]
 
     def initialize
       @moves = []
     end
 
-    def place_nought_at(location)
-      place("0", location)
+    def place_nought_at(x, y)
+      place("0", Point.new(x, y))
     end
 
-    def place_cross_at(location)
-      place("X", location)
+    def place_cross_at(x, y)
+      place("X", Point.new(x, y))
     end
 
     def print_grid
