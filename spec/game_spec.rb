@@ -1,4 +1,5 @@
 require './lib/game'
+require './lib/moves_list'
 require 'pry'
 
 module NoughtsAndCrosses

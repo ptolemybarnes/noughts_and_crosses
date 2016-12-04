@@ -3,69 +3,10 @@ module NoughtsAndCrosses
   end
 
   LOCATIONS = [
-    Point.new(0, 2),
-    Point.new(1, 2),
-    Point.new(2, 2),
-    Point.new(0, 1),
-    Point.new(1, 1),
-    Point.new(2, 1),
-    Point.new(0, 0),
-    Point.new(1, 0),
-    Point.new(2, 0)
-  ]
-
-  class MovesList
-
-    def initialize(moves = {})
-      @moves = moves
-    end
-
-    def add(location, content)
-      raise YouCantGoThereError  if moves[location]
-      raise NotYourTurnError if !empty? && last[1] == content
-      moves[location] = content
-    end
-
-    def fetch(key, default = nil)
-      moves.fetch(key, default)
-    end
-
-    def length
-      moves.length
-    end
-
-    def any? &block
-      moves.any? &block
-    end
-
-    def each_row
-      LOCATIONS.each_slice(3).map do |row|
-        row.map {|location| fetch(location) }
-      end
-    end
-
-    def each_column
-      rotate(LOCATIONS.each_slice(3).to_a).map do |row|
-        row.map {|location| fetch(location) }
-      end
-    end
-
-    private
-
-    def rotate(two_dimensional_array)
-      two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
-    end
-
-    def empty?
-      moves.empty?
-    end
-
-    def last
-      moves.to_a.last
-    end
-
-    attr_reader :moves
-  end
+    [0, 2], [1, 2], [2, 2],
+    [0, 1], [1, 1], [2, 1],
+    [0, 0], [1, 0], [2, 0]
+  ].map {|coordinate| Point.new(*coordinate) }
 
   class Game
 
@@ -93,12 +34,12 @@ module NoughtsAndCrosses
     end
 
     def over?
-      forward_slash_diagonal = [Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)].map do |point|
-        moves.fetch(point)
-      end
-      backward_slash_diagonal = [Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)].map do |point|
-        moves.fetch(point)
-      end
+      forward_slash_diagonal = [
+        Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)
+      ].map { |point| moves.fetch(point) }
+      backward_slash_diagonal = [
+        Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)
+      ].map { |point| moves.fetch(point) }
       (moves.each_row.any? &IsLineOfThree) || (moves.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal) || moves.length == 9
     end
 
