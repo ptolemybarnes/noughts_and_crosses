@@ -16,16 +16,18 @@ module NoughtsAndCrosses
 
   class MovesList
 
-    def initialize(moves = [])
+    def initialize(moves = {})
       @moves = moves
     end
 
     def add(location, content)
-      moves << [location, content]
+      raise YouCantGoThereError  if moves[location]
+      raise NotYourTurnError if !empty? && last[1] == content
+      moves[location] = content
     end
 
-    def fetch(key)
-      moves.to_h[key]
+    def fetch(key, default = nil)
+      moves.fetch(key, default)
     end
 
     def length
@@ -36,19 +38,31 @@ module NoughtsAndCrosses
       moves.any? &block
     end
 
+    def each_row
+      LOCATIONS.each_slice(3).map do |row|
+        row.map {|location| fetch(location) }
+      end
+    end
+
+    def each_column
+      rotate(LOCATIONS.each_slice(3).to_a).map do |row|
+        row.map {|location| fetch(location) }
+      end
+    end
+
+    private
+
+    def rotate(two_dimensional_array)
+      two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
+    end
+
     def empty?
       moves.empty?
     end
 
     def last
-      moves.last
+      moves.to_a.last
     end
-
-    def to_h
-      moves.to_h
-    end
-
-    private
 
     attr_reader :moves
   end
@@ -79,37 +93,29 @@ module NoughtsAndCrosses
     end
 
     def over?
-      grid = map_to_grid {|location| moves.fetch(location) }
-      forward_slash_diagonal  = grid.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
-      backward_slash_diagonal = grid.map.with_index {|arr, idx| arr[idx] }
-      (grid.any? &IsLineOfThree) || (rotate(grid).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal) || moves.length == 9
+      forward_slash_diagonal = [Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)].map do |point|
+        moves.fetch(point)
+      end
+      backward_slash_diagonal = [Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)].map do |point|
+        moves.fetch(point)
+      end
+      (moves.each_row.any? &IsLineOfThree) || (moves.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal) || moves.length == 9
     end
 
     private
 
     attr_reader :moves
 
-    def rotate(two_dimensional_array)
-      two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
-    end
-
-    def map_to_grid &block
-      LOCATIONS.map(&block).each_slice(3)
-    end
-
     def place(mark, location)
       raise YouCantGoThereError.new("The game is over") if over?
       raise YouCantGoThereError.new("location #{location} doesn't exist") if !LOCATIONS.include? location
-      raise YouCantGoThereError  if moves.any? {|move| move.first == location }
-      raise NotYourTurnError if !moves.empty? && moves.last[1] == mark
       moves.add(location, mark)
       self
     end
 
     def _print_grid
-      moves_and_marks = moves.to_h
-      map_to_grid do |location|
-        moves_and_marks.fetch(location, " ")
+      moves.each_row.map do |row|
+        row.map {|content| content.nil? ? " " : content }
       end.map(&:join).join("|\n|")
     end
   end
