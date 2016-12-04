@@ -14,10 +14,49 @@ module NoughtsAndCrosses
     Point.new(2, 0)
   ]
 
+  class MovesList
+
+    def initialize(moves = [])
+      @moves = moves
+    end
+
+    def add(location, content)
+      moves << [location, content]
+    end
+
+    def fetch(key)
+      moves.to_h[key]
+    end
+
+    def length
+      moves.length
+    end
+
+    def any? &block
+      moves.any? &block
+    end
+
+    def empty?
+      moves.empty?
+    end
+
+    def last
+      moves.last
+    end
+
+    def to_h
+      moves.to_h
+    end
+
+    private
+
+    attr_reader :moves
+  end
+
   class Game
 
     def initialize
-      @moves = []
+      @moves = MovesList.new
     end
 
     def place_nought_at(x, y)
@@ -40,8 +79,7 @@ module NoughtsAndCrosses
     end
 
     def over?
-      moves_and_marks = moves.to_h
-      grid = map_to_grid {|location| moves_and_marks[location] }
+      grid = map_to_grid {|location| moves.fetch(location) }
       forward_slash_diagonal  = grid.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
       backward_slash_diagonal = grid.map.with_index {|arr, idx| arr[idx] }
       (grid.any? &IsLineOfThree) || (rotate(grid).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal) || moves.length == 9
@@ -64,7 +102,7 @@ module NoughtsAndCrosses
       raise YouCantGoThereError.new("location #{location} doesn't exist") if !LOCATIONS.include? location
       raise YouCantGoThereError  if moves.any? {|move| move.first == location }
       raise NotYourTurnError if !moves.empty? && moves.last[1] == mark
-      moves << [location, mark]
+      moves.add(location, mark)
       self
     end
 
