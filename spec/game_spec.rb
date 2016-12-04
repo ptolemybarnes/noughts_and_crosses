@@ -1,5 +1,7 @@
+require './lib/point'
 require './lib/game'
 require './lib/moves_list'
+require './lib/computer'
 require 'pry'
 
 module NoughtsAndCrosses
@@ -17,17 +19,22 @@ module NoughtsAndCrosses
     BOTTOM_RIGHT  = Point.new(2, 0)
 
     describe 'Unbeatable computer' do
-      it 'always plays its first move in the corner' do
+      it 'plays an easy winning sequence' do
         computer = Computer.new
-        computer_move = computer.decide_move(game.moves.dup)
 
-        game.place_nought_at(computer_move)
+        game.place_nought_at(computer.decide_move(game.moves.dup))
+          .place_cross_at(TOP_MIDDLE)
+          .place_nought_at(computer.decide_move(game.moves.dup))
+          .place_cross_at(MIDDLE_LEFT)
+          .place_nought_at(computer.decide_move(game.moves.dup))
+          .place_cross_at(TOP_RIGHT)
+          .place_nought_at(computer.decide_move(game.moves.dup))
 
         expect(game.print_grid).to eq(<<~EXAMPLE
           -----
-          |   |
-          |   |
-          |0  |
+          |0XX|
+          |X0 |
+          |0 0|
           -----
         EXAMPLE
         )

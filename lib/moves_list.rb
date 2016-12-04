@@ -39,16 +39,16 @@ module NoughtsAndCrosses
       self.class.new(moves.dup)
     end
 
+    def empty?
+      moves.empty?
+    end
+
     private
 
     attr_reader :moves
 
     def rotate(two_dimensional_array)
       two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
-    end
-
-    def empty?
-      moves.empty?
     end
 
     def last

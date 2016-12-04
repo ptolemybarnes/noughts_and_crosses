@@ -1,14 +1,4 @@
 module NoughtsAndCrosses
-  class Point < Struct.new(:x, :y)
-  end
-
-  class Computer
-
-    def decide_move(moves_list)
-      Point.new(0, 0)
-    end
-  end
-
   LOCATIONS = [
     [0, 2], [1, 2], [2, 2],
     [0, 1], [1, 1], [2, 1],
