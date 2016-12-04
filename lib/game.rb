@@ -60,6 +60,7 @@ module NoughtsAndCrosses
       raise YouCantGoThereError  if moves.any? {|move| move.first == location }
       raise NotYourTurnError if !moves.empty? && moves.last[1] == mark
       moves << [location, mark]
+      self
     end
 
     def _print_grid

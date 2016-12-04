@@ -31,7 +31,7 @@ module NoughtsAndCrosses
 
     it 'placing a 0 followed by an X' do
       game.place_nought_at(*MIDDLE)
-      game.place_cross_at(*MIDDLE_LEFT)
+        .place_cross_at(*MIDDLE_LEFT)
 
       expect(game.print_grid).to eq(<<~EXAMPLE
         -----
@@ -51,20 +51,20 @@ module NoughtsAndCrosses
 
       it 'is over when there are 3 noughts horizontally' do
         game.place_nought_at(*MIDDLE)
-        game.place_cross_at(*BOTTOM_MIDDLE)
-        game.place_nought_at(*MIDDLE_LEFT)
-        game.place_cross_at(*BOTTOM_RIGHT)
-        game.place_nought_at(*MIDDLE_RIGHT)
+          .place_cross_at(*BOTTOM_MIDDLE)
+          .place_nought_at(*MIDDLE_LEFT)
+          .place_cross_at(*BOTTOM_RIGHT)
+          .place_nought_at(*MIDDLE_RIGHT)
 
         expect(game).to be_over
       end
 
       it 'is over when there are 3 crosses vertically' do
         game.place_cross_at(*BOTTOM_LEFT)
-        game.place_nought_at(*BOTTOM_MIDDLE)
-        game.place_cross_at(*MIDDLE_LEFT)
-        game.place_nought_at(*MIDDLE)
-        game.place_cross_at(*TOP_LEFT)
+          .place_nought_at(*BOTTOM_MIDDLE)
+          .place_cross_at(*MIDDLE_LEFT)
+          .place_nought_at(*MIDDLE)
+          .place_cross_at(*TOP_LEFT)
 
         expect(game).to be_over
       end
@@ -72,30 +72,30 @@ module NoughtsAndCrosses
 
     it 'is over when there are 3 noughts diagonally forwards (/)' do
       game.place_cross_at(*BOTTOM_LEFT)
-      game.place_nought_at(*BOTTOM_MIDDLE)
-      game.place_cross_at(*MIDDLE)
-      game.place_nought_at(*BOTTOM_RIGHT)
-      game.place_cross_at(*TOP_RIGHT)
+        .place_nought_at(*BOTTOM_MIDDLE)
+        .place_cross_at(*MIDDLE)
+        .place_nought_at(*BOTTOM_RIGHT)
+        .place_cross_at(*TOP_RIGHT)
 
       expect(game).to be_over
     end
 
     it 'is over when there are 3 crosses diagonally forward (/)' do
       game.place_cross_at(*BOTTOM_LEFT)
-      game.place_nought_at(*BOTTOM_MIDDLE)
-      game.place_cross_at(*MIDDLE)
-      game.place_nought_at(*BOTTOM_RIGHT)
-      game.place_cross_at(*TOP_RIGHT)
+        .place_nought_at(*BOTTOM_MIDDLE)
+        .place_cross_at(*MIDDLE)
+        .place_nought_at(*BOTTOM_RIGHT)
+        .place_cross_at(*TOP_RIGHT)
 
       expect(game).to be_over
     end
 
     it 'is over when there are 3 noughts diagonally backward (\)' do
       game.place_nought_at(*BOTTOM_RIGHT)
-      game.place_cross_at(*BOTTOM_MIDDLE)
-      game.place_nought_at(*MIDDLE)
-      game.place_cross_at(*BOTTOM_LEFT)
-      game.place_nought_at(*TOP_LEFT)
+        .place_cross_at(*BOTTOM_MIDDLE)
+        .place_nought_at(*MIDDLE)
+        .place_cross_at(*BOTTOM_LEFT)
+        .place_nought_at(*TOP_LEFT)
 
       expect(game).to be_over
     end
