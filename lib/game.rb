@@ -41,12 +41,10 @@ module NoughtsAndCrosses
 
     def over?
       moves_and_marks = moves.to_h
-      rows = LOCATIONS.map do |location|
-        moves_and_marks[location]
-      end.each_slice(3)
-      forward_slash_diagonal = rows.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
-      backward_slash_diagonal = rows.to_a.map.with_index {|arr, idx| arr[idx] }
-      (rows.any? &IsLineOfThree) || (rotate(rows).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
+      grid = map_to_grid {|location| moves_and_marks[location] }
+      forward_slash_diagonal  = grid.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
+      backward_slash_diagonal = grid.map.with_index {|arr, idx| arr[idx] }
+      (grid.any? &IsLineOfThree) || (rotate(grid).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
     end
 
     def rotate(two_dimensional_array)
@@ -54,6 +52,10 @@ module NoughtsAndCrosses
     end
 
     private
+
+    def map_to_grid &block
+      LOCATIONS.map(&block).each_slice(3)
+    end
 
     def place(mark, location)
       raise YouCantGoThereError.new("location #{location} doesn't exist") if !LOCATIONS.include? location
@@ -65,9 +67,9 @@ module NoughtsAndCrosses
 
     def _print_grid
       moves_and_marks = moves.to_h
-      LOCATIONS.map do |location|
+      map_to_grid do |location|
         moves_and_marks.fetch(location, " ")
-      end.each_slice(3).map(&:join).join("|\n|")
+      end.map(&:join).join("|\n|")
     end
 
     attr_reader :moves
