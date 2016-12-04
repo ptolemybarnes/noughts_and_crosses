@@ -6,7 +6,7 @@ module NoughtsAndCrosses
     end
 
     def add(location, content)
-      raise YouCantGoThereError  if moves[location]
+      raise YouCantGoThereError if moves[location]
       raise NotYourTurnError if !empty? && last[1] == content
       moves[location] = content
     end
@@ -31,7 +31,17 @@ module NoughtsAndCrosses
       end.to_enum
     end
 
+    def full?
+      LOCATIONS.map {|location| fetch(location) }.all?
+    end
+
+    def dup
+      self.class.new(moves.dup)
+    end
+
     private
+
+    attr_reader :moves
 
     def rotate(two_dimensional_array)
       two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
@@ -44,7 +54,5 @@ module NoughtsAndCrosses
     def last
       moves.to_a.last
     end
-
-    attr_reader :moves
   end
 end

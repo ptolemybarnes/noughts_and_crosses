@@ -2,6 +2,13 @@ module NoughtsAndCrosses
   class Point < Struct.new(:x, :y)
   end
 
+  class Computer
+
+    def decide_move(moves_list)
+      Point.new(0, 0)
+    end
+  end
+
   LOCATIONS = [
     [0, 2], [1, 2], [2, 2],
     [0, 1], [1, 1], [2, 1],
@@ -14,12 +21,12 @@ module NoughtsAndCrosses
       @moves = MovesList.new
     end
 
-    def place_nought_at(x, y)
-      place("0", Point.new(x, y))
+    def place_nought_at(point)
+      place("0", point)
     end
 
-    def place_cross_at(x, y)
-      place("X", Point.new(x, y))
+    def place_cross_at(point)
+      place("X", point)
     end
 
     def print_grid
@@ -34,18 +41,24 @@ module NoughtsAndCrosses
     end
 
     def over?
+      winner? || moves.full?
+    end
+
+    def moves
+      @moves
+    end
+
+    private
+
+    def winner?
       forward_slash_diagonal = [
         Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)
       ].map { |point| moves.fetch(point) }
       backward_slash_diagonal = [
         Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)
       ].map { |point| moves.fetch(point) }
-      (moves.each_row.any? &IsLineOfThree) || (moves.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal) || moves.length == 9
+      (moves.each_row.any? &IsLineOfThree) || (moves.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
     end
-
-    private
-
-    attr_reader :moves
 
     def place(mark, location)
       raise YouCantGoThereError.new("The game is over") if over?
