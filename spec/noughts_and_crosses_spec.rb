@@ -70,12 +70,32 @@ module NoughtsAndCrosses
       end
     end
 
-    it 'is over when there are 3 noughts diagonally' do
+    it 'is over when there are 3 noughts diagonally forwards (/)' do
       game.place_cross_at(*BOTTOM_LEFT)
       game.place_nought_at(*BOTTOM_MIDDLE)
       game.place_cross_at(*MIDDLE)
       game.place_nought_at(*BOTTOM_RIGHT)
       game.place_cross_at(*TOP_RIGHT)
+
+      expect(game).to be_over
+    end
+
+    it 'is over when there are 3 crosses diagonally forward (/)' do
+      game.place_cross_at(*BOTTOM_LEFT)
+      game.place_nought_at(*BOTTOM_MIDDLE)
+      game.place_cross_at(*MIDDLE)
+      game.place_nought_at(*BOTTOM_RIGHT)
+      game.place_cross_at(*TOP_RIGHT)
+
+      expect(game).to be_over
+    end
+
+    it 'is over when there are 3 noughts diagonally backward (\)' do
+      game.place_nought_at(*BOTTOM_RIGHT)
+      game.place_cross_at(*BOTTOM_MIDDLE)
+      game.place_nought_at(*MIDDLE)
+      game.place_cross_at(*BOTTOM_LEFT)
+      game.place_nought_at(*TOP_LEFT)
 
       expect(game).to be_over
     end

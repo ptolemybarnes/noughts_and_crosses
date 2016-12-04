@@ -34,7 +34,7 @@ module NoughtsAndCrosses
         "|\n-----\n"
     end
 
-    LineOfThree = proc do |row|
+    IsLineOfThree = proc do |row|
       row = row.compact
       row.length == 3 && row.uniq.one?
     end
@@ -45,7 +45,8 @@ module NoughtsAndCrosses
         moves_and_marks[location]
       end.each_slice(3)
       forward_slash_diagonal = rows.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
-      (rows.any? &LineOfThree) || (rotate(rows).any? &LineOfThree) || LineOfThree.(forward_slash_diagonal)
+      backward_slash_diagonal = rows.to_a.map.with_index {|arr, idx| arr[idx] }
+      (rows.any? &IsLineOfThree) || (rotate(rows).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
     end
 
     def rotate(two_dimensional_array)
