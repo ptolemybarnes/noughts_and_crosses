@@ -44,14 +44,16 @@ module NoughtsAndCrosses
       grid = map_to_grid {|location| moves_and_marks[location] }
       forward_slash_diagonal  = grid.to_a.reverse.map.with_index {|arr, idx| arr[idx] }
       backward_slash_diagonal = grid.map.with_index {|arr, idx| arr[idx] }
-      (grid.any? &IsLineOfThree) || (rotate(grid).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
+      (grid.any? &IsLineOfThree) || (rotate(grid).any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal) || moves.length == 9
     end
+
+    private
+
+    attr_reader :moves
 
     def rotate(two_dimensional_array)
       two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
     end
-
-    private
 
     def map_to_grid &block
       LOCATIONS.map(&block).each_slice(3)
@@ -72,8 +74,6 @@ module NoughtsAndCrosses
         moves_and_marks.fetch(location, " ")
       end.map(&:join).join("|\n|")
     end
-
-    attr_reader :moves
   end
 
   class RuleViolationError < StandardError; end

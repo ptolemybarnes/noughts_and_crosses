@@ -99,6 +99,20 @@ module NoughtsAndCrosses
       expect(game).to be_over
     end
 
+    it 'is over when the grid is full but there is no winner' do
+      game.place_nought_at(*TOP_MIDDLE)
+        .place_cross_at(*BOTTOM_LEFT)
+        .place_nought_at(*BOTTOM_RIGHT)
+        .place_cross_at(*MIDDLE_RIGHT)
+        .place_nought_at(*MIDDLE)
+        .place_cross_at(*BOTTOM_MIDDLE)
+        .place_nought_at(*TOP_RIGHT)
+        .place_cross_at(*TOP_LEFT)
+        .place_nought_at(*MIDDLE_LEFT)
+
+      expect(game).to be_over
+    end
+
     describe "rule violations" do
       it "doesn't allow two 0s to be placed consecutively" do
         game.place_nought_at(*MIDDLE)
