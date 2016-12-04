@@ -58,6 +58,7 @@ module NoughtsAndCrosses
     end
 
     def place(mark, location)
+      raise YouCantGoThereError.new("The game is over") if over?
       raise YouCantGoThereError.new("location #{location} doesn't exist") if !LOCATIONS.include? location
       raise YouCantGoThereError  if moves.any? {|move| move.first == location }
       raise NotYourTurnError if !moves.empty? && moves.last[1] == mark

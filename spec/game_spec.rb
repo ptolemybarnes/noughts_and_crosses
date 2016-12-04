@@ -2,7 +2,6 @@ require './lib/game'
 require 'pry'
 
 module NoughtsAndCrosses
-  MIDDLE = [1, 1]
   describe Game do
     let(:game) { Game.new }
 
@@ -121,6 +120,16 @@ module NoughtsAndCrosses
 
       it "doesn't allow marks in a location off the grid" do
         expect { game.place_cross_at(20, 20) }.to raise_error(YouCantGoThereError)
+      end
+
+      it "doesn't allow further moves when the game is over" do
+        game.place_nought_at(*MIDDLE)
+          .place_cross_at(*BOTTOM_MIDDLE)
+          .place_nought_at(*MIDDLE_LEFT)
+          .place_cross_at(*BOTTOM_RIGHT)
+          .place_nought_at(*MIDDLE_RIGHT)
+
+        expect { game.place_cross_at(*TOP_LEFT) }.to raise_error(YouCantGoThereError)
       end
     end
   end
