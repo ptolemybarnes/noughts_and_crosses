@@ -32,7 +32,7 @@ module NoughtsAndCrosses
           .place_cross_at(TOP_RIGHT)
           .place_nought_at(computer.decide_move(game.moves.dup))
 
-        expect(game.print_grid).to eq(<<~EXAMPLE
+        expect(game.print).to eq(<<~EXAMPLE
           -----
           |0XX|
           |X0 |
@@ -46,7 +46,7 @@ module NoughtsAndCrosses
     it 'placing a 0 on the grid' do
       game.place_nought_at(MIDDLE)
 
-      expect(game.print_grid).to eq(<<~EXAMPLE
+      expect(game.print).to eq(<<~EXAMPLE
         -----
         |   |
         | 0 |
@@ -60,7 +60,7 @@ module NoughtsAndCrosses
       game.place_nought_at(MIDDLE)
         .place_cross_at(MIDDLE_LEFT)
 
-      expect(game.print_grid).to eq(<<~EXAMPLE
+      expect(game.print).to eq(<<~EXAMPLE
         -----
         |   |
         |X0 |
@@ -83,7 +83,6 @@ module NoughtsAndCrosses
           .place_cross_at(BOTTOM_RIGHT)
           .place_nought_at(MIDDLE_RIGHT)
 
-        $_pry_in = true
         expect(game).to be_over
       end
 

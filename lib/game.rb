@@ -19,7 +19,7 @@ module NoughtsAndCrosses
       place(Cross, point)
     end
 
-    def print_grid
+    def print
         "-----\n|" +
         grid.print +
         "|\n-----\n"

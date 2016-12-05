@@ -13,18 +13,6 @@ module NoughtsAndCrosses
       end.concat(each_row).concat(each_column).to_enum
     end
 
-    def each_row
-      LOCATIONS.each_slice(3).map do |row|
-        row.map {|location| [location, fetch(location)] }
-      end
-    end
-
-    def each_column
-      rotate(LOCATIONS.each_slice(3).to_a).map do |row|
-        row.map {|location| [location, fetch(location)] }
-      end
-    end
-
     def dup
       self.class.new(moves.dup)
     end
@@ -42,6 +30,18 @@ module NoughtsAndCrosses
     private
 
     attr_reader :moves
+
+    def each_row
+      LOCATIONS.each_slice(3).map do |row|
+        row.map {|location| [location, fetch(location)] }
+      end
+    end
+
+    def each_column
+      rotate(LOCATIONS.each_slice(3).to_a).map do |row|
+        row.map {|location| [location, fetch(location)] }
+      end
+    end
 
     def rotate(two_dimensional_array)
       two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
