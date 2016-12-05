@@ -42,7 +42,7 @@ module NoughtsAndCrosses
     end
 
     def winning_line
-      grid.each_line.find do |row|
+      grid.find_line do |row|
         compacted_row = row.reject {|move| move.mark.null_mark? }
         compacted_row.length == 3 && compacted_row.uniq {|move| move.mark }.one?
       end

@@ -8,17 +8,13 @@ module NoughtsAndCrosses
 
     def add(point, mark)
       new_move = Move.new(point, mark)
-      raise YouCantGoThereError if moves.find {|move| move.point == new_move.point }
-      raise NotYourTurnError if last && (last[1] == new_move.mark)
+      raise YouCantGoThereError if find_move_at(new_move.point)
+      raise NotYourTurnError    if last_move && (last_move[1] == new_move.mark)
       moves << new_move
     end
 
-    def next_move
-      last[1] == 'X' ? '0' : 'X'
-    end
-
     def fetch(point)
-      moves.find {|move| move.point == point } || Move.new(point, NullMark)
+      find_move_at(point) || Move.new(point, NullMark)
     end
 
     def dup
@@ -33,7 +29,11 @@ module NoughtsAndCrosses
 
     attr_reader :moves
 
-    def last
+    def find_move_at(other_point)
+      moves.find {|move| move.point == other_point }
+    end
+
+    def last_move
       moves.last
     end
   end

@@ -16,7 +16,7 @@ module NoughtsAndCrosses
     end
 
     def winning_move
-      winning_line = grid.each_line.find do |line|
+      winning_line = grid.find_line do |line|
         line.select do |move|
           move.mark == Nought
         end.length == 2 && line.none? {|move| move.mark == Cross }
