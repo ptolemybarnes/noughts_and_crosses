@@ -25,29 +25,19 @@ module NoughtsAndCrosses
         "|\n-----\n"
     end
 
-    IsLineOfThree = proc do |row|
-      compacted_row = row.reject {|position, content| content.null_mark? }
-      compacted_row.length == 3 && compacted_row.uniq {|k, v| v }.one?
-    end
-
     def over?
       winner? || grid.full?
     end
 
-    def moves
-      @moves
-    end
-
     private
 
+    attr_reader :moves
+
     def winner?
-      forward_slash_diagonal = [
-        Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)
-      ].map { |point| [point, grid.fetch(point)] }
-      backward_slash_diagonal = [
-        Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)
-      ].map { |point| [point, grid.fetch(point)] }
-      (grid.each_row.any? &IsLineOfThree) || (grid.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
+      grid.each_line.any? do |row|
+        compacted_row = row.reject {|position, content| content.null_mark? }
+        compacted_row.length == 3 && compacted_row.uniq {|k, v| v }.one?
+      end
     end
 
     def place(mark, location)
@@ -58,7 +48,7 @@ module NoughtsAndCrosses
     end
 
     def grid
-      Grid.new(moves)
+      Grid.new(moves.dup)
     end
 
     def _print_grid

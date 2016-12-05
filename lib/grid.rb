@@ -1,16 +1,17 @@
 module NoughtsAndCrosses
   class Grid
 
+    FORWARD_DIAGONAL  = [ Point.new(0, 0), Point.new(1, 1), Point.new(2, 2) ].freeze
+    BACKWARD_DIAGONAL = [ Point.new(2, 0), Point.new(1, 1), Point.new(0, 2) ].freeze
+
     def initialize(moves)
       @moves = moves
     end
 
     def each_line
-      lines = [
-        [ Point.new(0, 0), Point.new(1, 1), Point.new(2, 2) ],
-        [ Point.new(2, 0), Point.new(1, 1), Point.new(0, 2) ]
-      ].map {|arr| arr.map {|point| [ point, moves.fetch(point)] }}.concat(each_row).concat(each_column)
-      lines.to_enum
+      lines = [ FORWARD_DIAGONAL, BACKWARD_DIAGONAL ].map do |arr|
+        arr.map {|point| [ point, moves.fetch(point)] }
+      end.concat(each_row).concat(each_column).to_enum
     end
 
     def each_row
@@ -23,10 +24,6 @@ module NoughtsAndCrosses
       rotate(LOCATIONS.each_slice(3).to_a).map do |row|
         row.map {|location| [location, fetch(location)] }
       end
-    end
-
-    def rotate(two_dimensional_array)
-      two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
     end
 
     def full?
@@ -50,6 +47,10 @@ module NoughtsAndCrosses
     private
 
     attr_reader :moves
+
+    def rotate(two_dimensional_array)
+      two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
+    end
 
   end
 end
