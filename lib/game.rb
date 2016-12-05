@@ -5,24 +5,6 @@ module NoughtsAndCrosses
     [0, 0], [1, 0], [2, 0]
   ].map {|coordinate| Point.new(*coordinate) }
 
-  class Nought
-    def self.null_mark?
-      false
-    end
-  end
-
-  class Cross
-    def self.null_mark?
-      false
-    end
-  end
-
-  class NullMark
-    def self.null_mark?
-      true
-    end
-  end
-
   class Game
 
     def initialize

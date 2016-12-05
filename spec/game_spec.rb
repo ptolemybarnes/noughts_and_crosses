@@ -1,5 +1,6 @@
 require './lib/point'
 require './lib/grid'
+require './lib/mark'
 require './lib/game'
 require './lib/moves_list'
 require './lib/computer'
