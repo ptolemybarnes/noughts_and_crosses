@@ -3,7 +3,7 @@ module NoughtsAndCrosses
     [0, 2], [1, 2], [2, 2],
     [0, 1], [1, 1], [2, 1],
     [0, 0], [1, 0], [2, 0]
-  ].map {|coordinate| Point.new(*coordinate) }
+  ].map {|coordinate| Point.new(*coordinate) }.freeze
 
   class Game
 
@@ -21,7 +21,7 @@ module NoughtsAndCrosses
 
     def print_grid
         "-----\n|" +
-        _print_grid +
+        grid.print +
         "|\n-----\n"
     end
 
@@ -57,20 +57,6 @@ module NoughtsAndCrosses
 
     def grid
       Grid.new(moves.dup)
-    end
-
-    def _print_grid
-      grid.each_row.map do |row|
-        row.map do |_position, content|
-          if content.null_mark?
-            ' '
-          elsif content == Nought
-            '0'
-          else
-            'X'
-          end
-        end
-      end.map(&:join).join("|\n|")
     end
   end
 

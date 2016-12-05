@@ -33,6 +33,12 @@ module NoughtsAndCrosses
       moves.fetch(key, default)
     end
 
+    def print
+      each_row.map do |row|
+        row.map { |_position, mark| mark.to_s }
+      end.map(&:join).join("|\n|")
+    end
+
     private
 
     attr_reader :moves
