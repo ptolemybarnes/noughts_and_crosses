@@ -1,5 +1,6 @@
 module NoughtsAndCrosses
   class MovesList
+    MAX_MOVES = 9
 
     def initialize(moves = {})
       @moves = moves
@@ -9,10 +10,6 @@ module NoughtsAndCrosses
       raise YouCantGoThereError if moves[location]
       raise NotYourTurnError if last && last[1] == content
       moves[location] = content
-    end
-
-    def length
-      moves.length
     end
 
     def next_move
@@ -25,6 +22,10 @@ module NoughtsAndCrosses
 
     def dup
       MovesList.new(moves.dup)
+    end
+
+    def complete?
+      moves.length == MAX_MOVES
     end
 
     private

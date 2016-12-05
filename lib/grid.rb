@@ -1,6 +1,5 @@
 module NoughtsAndCrosses
   class Grid
-
     FORWARD_DIAGONAL  = [ Point.new(0, 0), Point.new(1, 1), Point.new(2, 2) ].freeze
     BACKWARD_DIAGONAL = [ Point.new(2, 0), Point.new(1, 1), Point.new(0, 2) ].freeze
 
@@ -26,18 +25,8 @@ module NoughtsAndCrosses
       end
     end
 
-    def full?
-      moves.length > 8
-    end
-
     def dup
       self.class.new(moves.dup)
-    end
-
-    def empty?
-      moves.each_position.all? do |position, content|
-        content.null_mark?
-      end
     end
 
     def fetch(key, default = NullMark)

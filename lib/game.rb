@@ -26,15 +26,23 @@ module NoughtsAndCrosses
     end
 
     def over?
-      winner? || grid.full?
+      won? || moves.complete?
     end
 
     private
 
     attr_reader :moves
 
-    def winner?
-      grid.each_line.any? do |row|
+    def won?
+      !winner.nil?
+    end
+
+    def winner
+      winning_line.first[1] if winning_line
+    end
+
+    def winning_line
+      grid.each_line.find do |row|
         compacted_row = row.reject {|position, content| content.null_mark? }
         compacted_row.length == 3 && compacted_row.uniq {|k, v| v }.one?
       end
