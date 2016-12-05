@@ -2,22 +2,23 @@ module NoughtsAndCrosses
   class MovesList
     MAX_MOVES = 9
 
-    def initialize(moves = {})
+    def initialize(moves = [])
       @moves = moves
     end
 
-    def add(location, content)
-      raise YouCantGoThereError if moves[location]
-      raise NotYourTurnError if last && last[1] == content
-      moves[location] = content
+    def add(point, mark)
+      new_move = Move.new(point, mark)
+      raise YouCantGoThereError if moves.find {|move| move.point == new_move.point }
+      raise NotYourTurnError if last && (last[1] == new_move.mark)
+      moves << new_move
     end
 
     def next_move
       last[1] == 'X' ? '0' : 'X'
     end
 
-    def fetch(key, default = NullMark)
-      moves.fetch(key, default)
+    def fetch(point)
+      moves.find {|move| move.point == point } || Move.new(point, NullMark)
     end
 
     def dup
@@ -33,7 +34,7 @@ module NoughtsAndCrosses
     attr_reader :moves
 
     def last
-      moves.to_a.last
+      moves.last
     end
   end
 end

@@ -1,8 +1,10 @@
+require 'pry'
 require './lib/point'
 require './lib/game'
 require './lib/grid'
 require './lib/mark'
 require './lib/moves_list'
+require './lib/move'
 
 module NoughtsAndCrosses
   describe Game do
@@ -76,8 +78,8 @@ module NoughtsAndCrosses
       game.place_cross_at(BOTTOM_LEFT)
         .place_nought_at(BOTTOM_MIDDLE)
         .place_cross_at(MIDDLE)
-        .place_nought_at(BOTTOM_RIGHT)
-        .place_cross_at(TOP_RIGHT)
+      game.place_nought_at(BOTTOM_RIGHT)
+      game.place_cross_at(TOP_RIGHT)
 
       expect(game).to be_over
     end
@@ -135,7 +137,6 @@ module NoughtsAndCrosses
           .place_nought_at(MIDDLE_LEFT)
           .place_cross_at(BOTTOM_RIGHT)
           .place_nought_at(MIDDLE_RIGHT)
-        $pry_in = true
 
         expect { game.place_cross_at(TOP_LEFT) }.to raise_error(YouCantGoThereError)
       end

@@ -9,7 +9,7 @@ module NoughtsAndCrosses
 
     def each_line
       lines = [ FORWARD_DIAGONAL, BACKWARD_DIAGONAL ].map do |arr|
-        arr.map {|point| [ point, moves.fetch(point)] }
+        arr.map {|point| fetch(point) }
       end.concat(each_row).concat(each_column).to_enum
     end
 
@@ -17,18 +17,18 @@ module NoughtsAndCrosses
       self.class.new(moves.dup)
     end
 
-    def fetch(key, default = NullMark)
-      moves.fetch(key, default)
+    def fetch(key)
+      moves.fetch(key)
     end
 
     def print
       each_row.map do |row|
-        row.map { |_position, mark| mark.to_s }
+        row.map { |move| move.mark.to_s }
       end.map(&:join).join("|\n|")
     end
 
     def empty?
-      each_point.all? {|point, mark| mark.null_mark? }
+      each_point.all? {|move| move.mark.null_mark? }
     end
 
     private
@@ -36,18 +36,18 @@ module NoughtsAndCrosses
     attr_reader :moves
 
     def each_point
-      LOCATIONS.map {|point| [point, moves.fetch(point)] }.to_enum
+      POINTS.map {|point| fetch(point) }.to_enum
     end
 
     def each_row
-      LOCATIONS.each_slice(3).map do |row|
-        row.map {|location| [location, fetch(location)] }
+      POINTS.each_slice(3).map do |row|
+        row.map {|point| fetch(point) }
       end
     end
 
     def each_column
-      rotate(LOCATIONS.each_slice(3).to_a).map do |row|
-        row.map {|location| [location, fetch(location)] }
+      rotate(POINTS.each_slice(3).to_a).map do |row|
+        row.map {|point| fetch(point) }
       end
     end
 

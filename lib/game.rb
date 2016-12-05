@@ -1,5 +1,5 @@
 module NoughtsAndCrosses
-  LOCATIONS = [
+  POINTS = [
     [0, 2], [1, 2], [2, 2],
     [0, 1], [1, 1], [2, 1],
     [0, 0], [1, 0], [2, 0]
@@ -43,15 +43,15 @@ module NoughtsAndCrosses
 
     def winning_line
       grid.each_line.find do |row|
-        compacted_row = row.reject {|position, content| content.null_mark? }
-        compacted_row.length == 3 && compacted_row.uniq {|k, v| v }.one?
+        compacted_row = row.reject {|move| move.mark.null_mark? }
+        compacted_row.length == 3 && compacted_row.uniq {|move| move.mark }.one?
       end
     end
 
-    def place(mark, location)
+    def place(mark, point)
       raise YouCantGoThereError.new("The game is over") if over?
-      raise YouCantGoThereError.new("location #{location} doesn't exist") if !LOCATIONS.include? location
-      moves.add(location, mark)
+      raise YouCantGoThereError.new("Point #{point} doesn't exist") if !POINTS.include? point
+      moves.add(point, mark)
       self
     end
 
