@@ -27,9 +27,17 @@ module NoughtsAndCrosses
       end.map(&:join).join("|\n|")
     end
 
+    def empty?
+      each_point.all? {|point, mark| mark.null_mark? }
+    end
+
     private
 
     attr_reader :moves
+
+    def each_point
+      LOCATIONS.map {|point| [point, moves.fetch(point)] }.to_enum
+    end
 
     def each_row
       LOCATIONS.each_slice(3).map do |row|

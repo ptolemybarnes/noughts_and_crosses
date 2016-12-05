@@ -3,8 +3,6 @@ require './lib/game'
 require './lib/grid'
 require './lib/mark'
 require './lib/moves_list'
-require './lib/computer'
-require 'pry'
 
 module NoughtsAndCrosses
   describe Game do
@@ -19,29 +17,6 @@ module NoughtsAndCrosses
     BOTTOM_LEFT   = Point.new(0, 0)
     BOTTOM_MIDDLE = Point.new(1, 0)
     BOTTOM_RIGHT  = Point.new(2, 0)
-
-    describe 'Unbeatable computer' do
-      it 'plays an easy winning sequence' do
-        computer = Computer.new
-
-        game.place_nought_at(computer.decide_move(game.moves.dup))
-          .place_cross_at(TOP_MIDDLE)
-          .place_nought_at(computer.decide_move(game.moves.dup))
-          .place_cross_at(MIDDLE_LEFT)
-          .place_nought_at(computer.decide_move(game.moves.dup))
-          .place_cross_at(TOP_RIGHT)
-          .place_nought_at(computer.decide_move(game.moves.dup))
-
-        expect(game.print).to eq(<<~EXAMPLE
-          -----
-          |0XX|
-          |X0 |
-          |0 0|
-          -----
-        EXAMPLE
-        )
-      end
-    end
 
     it 'placing a 0 on the grid' do
       game.place_nought_at(MIDDLE)

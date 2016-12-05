@@ -1,6 +1,10 @@
+require 'pry'
 require './lib/computer'
 require './lib/point'
+require './lib/game'
 require './lib/moves_list'
+require './lib/mark'
+require './lib/grid'
 
 module NoughtsAndCrosses
   describe Computer do
@@ -18,41 +22,43 @@ module NoughtsAndCrosses
 
     describe 'a winning sequence' do
       it 'plays its first move in a corner' do
-        expect(computer.decide_move(MovesList.new({}))).to eq BOTTOM_LEFT
+        grid = create_grid(<<~EXAMPLE
+          -----
+          |   |
+          |   |
+          |   |
+          -----
+        EXAMPLE
+        )
+
+        expect(computer.decide_move(grid)).to eq BOTTOM_LEFT
+      end
+
+      def create_grid(grid)
+        moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
+          row.map.with_index do |mark_string, x|
+            mark = [NullMark, Nought, Cross].find {|mark| mark.to_s == mark_string }
+            [ Point.new(x, y), mark ]
+          end
+        end.flatten(1).to_h
+        Grid.new(MovesList.new(moves_list))
       end
 
       it 'makes its second move in an adjacent corner' do
-        moves = {
-          BOTTOM_LEFT => '0',
-          TOP_MIDDLE => 'X'
-        }
+        grid = create_grid(<<~EXAMPLE
+          -----
+          | X |
+          |   |
+          |0  |
+          -----
+        EXAMPLE
+        )
 
-        expect(computer.decide_move(MovesList.new(moves))).to eq TOP_LEFT
+        expect(computer.decide_move(grid)).to eq TOP_LEFT
       end
 
-      it 'makes its third move in the middle' do
-        moves = {
-          BOTTOM_LEFT => '0',
-          TOP_MIDDLE  => 'X',
-          TOP_LEFT    => '0',
-          MIDDLE_LEFT => 'X'
-        }
-
-        expect(computer.decide_move(moves)).to eq MIDDLE
-      end
-
-      it 'makes its last move to win the game' do
-        moves = {
-          BOTTOM_LEFT => '0',
-          TOP_MIDDLE  => 'X',
-          TOP_LEFT    => '0',
-          MIDDLE_LEFT => 'X',
-          MIDDLE      => '0',
-          TOP_RIGHT   => 'X'
-        }
-
-        expect(computer.decide_move(MovesList.new(moves))).to eq BOTTOM_RIGHT
-      end
+      it 'makes its third move in the middle'
+      it 'makes its last move to win the game'
     end
   end
 end
