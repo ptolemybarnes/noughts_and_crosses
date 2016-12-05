@@ -57,7 +57,18 @@ module NoughtsAndCrosses
         expect(computer.decide_move(grid)).to eq TOP_LEFT
       end
 
-      it 'makes its third move in the middle'
+      it 'goes for a winning move if available' do
+        grid = create_grid(<<~EXAMPLE
+          -----
+          |0XX|
+          |X0 |
+          |0  |
+          -----
+        EXAMPLE
+        )
+
+        expect(computer.decide_move(grid)).to eq BOTTOM_RIGHT
+      end
       it 'makes its last move to win the game'
     end
   end
