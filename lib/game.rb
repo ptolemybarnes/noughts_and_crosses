@@ -49,7 +49,7 @@ module NoughtsAndCrosses
     end
 
     def over?
-      winner? || moves.full?
+      winner? || grid.full?
     end
 
     def moves
@@ -61,11 +61,11 @@ module NoughtsAndCrosses
     def winner?
       forward_slash_diagonal = [
         Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)
-      ].map { |point| [point, moves.fetch(point)] }
+      ].map { |point| [point, grid.fetch(point)] }
       backward_slash_diagonal = [
         Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)
-      ].map { |point| [point, moves.fetch(point)] }
-      (moves.each_row.any? &IsLineOfThree) || (moves.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
+      ].map { |point| [point, grid.fetch(point)] }
+      (grid.each_row.any? &IsLineOfThree) || (grid.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
     end
 
     def place(mark, location)
@@ -75,8 +75,12 @@ module NoughtsAndCrosses
       self
     end
 
+    def grid
+      Grid.new(moves)
+    end
+
     def _print_grid
-      moves.each_row.map do |row|
+      grid.each_row.map do |row|
         row.map do |_position, content|
           if content.null_mark?
             ' '

@@ -1,7 +1,7 @@
 module NoughtsAndCrosses
   class Computer
-    def decide_move(moves_list)
-      return Point.new(0, 0) if moves_list.empty?
+    def decide_move(grid)
+      return Point.new(0, 0) if grid.empty?
       return winning_move if winning_move(moves_list)
       turn_number = moves_list.length
       if turn_number == 2
