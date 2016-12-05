@@ -61,6 +61,19 @@ module NoughtsAndCrosses
         expect(decision.make(grid, Nought)).to eq Move.new(BOTTOM_RIGHT, Nought)
       end
 
+      it "blocks opponent if they're about to win" do
+        grid = parse_grid(<<~EXAMPLE
+          -----
+          |0X |
+          |X  |
+          |00 |
+          -----
+        EXAMPLE
+        )
+
+        expect(decision.make(grid, Cross)).to eq Move.new(BOTTOM_RIGHT, Cross)
+      end
+
       def parse_grid(grid)
         moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
           row.map.with_index do |mark_string, x|
