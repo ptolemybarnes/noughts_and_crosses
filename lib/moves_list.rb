@@ -1,4 +1,8 @@
 module NoughtsAndCrosses
+
+  class Grid
+  end
+
   class MovesList
 
     def initialize(moves = {})
@@ -11,7 +15,7 @@ module NoughtsAndCrosses
       moves[location] = content
     end
 
-    def fetch(key, default = nil)
+    def fetch(key, default = NullMark)
       moves.fetch(key, default)
     end
 
@@ -19,20 +23,28 @@ module NoughtsAndCrosses
       moves.length
     end
 
+    def each_line
+      lines = [
+        [ Point.new(0, 0), Point.new(1, 1), Point.new(2, 2) ],
+        [ Point.new(2, 0), Point.new(1, 1), Point.new(0, 2) ]
+      ].map {|arr| arr.map {|point| [ point, moves.fetch(point)] }}.concat(each_row).concat(each_column)
+      lines.to_enum
+    end
+
     def each_row
       LOCATIONS.each_slice(3).map do |row|
-        row.map {|location| fetch(location) }
-      end.to_enum
+        row.map {|location| [location, fetch(location)] }
+      end
     end
 
     def each_column
       rotate(LOCATIONS.each_slice(3).to_a).map do |row|
-        row.map {|location| fetch(location) }
-      end.to_enum
+        row.map {|location| [location, fetch(location)] }
+      end
     end
 
     def full?
-      LOCATIONS.map {|location| fetch(location) }.all?
+      moves.length > 8
     end
 
     def dup
@@ -41,6 +53,10 @@ module NoughtsAndCrosses
 
     def empty?
       moves.empty?
+    end
+
+    def next_move
+      last[1] == 'X' ? '0' : 'X'
     end
 
     private

@@ -81,6 +81,7 @@ module NoughtsAndCrosses
           .place_cross_at(BOTTOM_RIGHT)
           .place_nought_at(MIDDLE_RIGHT)
 
+        $_pry_in = true
         expect(game).to be_over
       end
 

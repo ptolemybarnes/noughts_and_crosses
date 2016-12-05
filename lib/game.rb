@@ -5,6 +5,24 @@ module NoughtsAndCrosses
     [0, 0], [1, 0], [2, 0]
   ].map {|coordinate| Point.new(*coordinate) }
 
+  class Nought
+    def self.null_mark?
+      false
+    end
+  end
+
+  class Cross
+    def self.null_mark?
+      false
+    end
+  end
+
+  class NullMark
+    def self.null_mark?
+      true
+    end
+  end
+
   class Game
 
     def initialize
@@ -12,11 +30,11 @@ module NoughtsAndCrosses
     end
 
     def place_nought_at(point)
-      place("0", point)
+      place(Nought, point)
     end
 
     def place_cross_at(point)
-      place("X", point)
+      place(Cross, point)
     end
 
     def print_grid
@@ -26,8 +44,8 @@ module NoughtsAndCrosses
     end
 
     IsLineOfThree = proc do |row|
-      row = row.compact
-      row.length == 3 && row.uniq.one?
+      compacted_row = row.reject {|position, content| content.null_mark? }
+      compacted_row.length == 3 && compacted_row.uniq {|k, v| v }.one?
     end
 
     def over?
@@ -43,10 +61,10 @@ module NoughtsAndCrosses
     def winner?
       forward_slash_diagonal = [
         Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)
-      ].map { |point| moves.fetch(point) }
+      ].map { |point| [point, moves.fetch(point)] }
       backward_slash_diagonal = [
         Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)
-      ].map { |point| moves.fetch(point) }
+      ].map { |point| [point, moves.fetch(point)] }
       (moves.each_row.any? &IsLineOfThree) || (moves.each_column.any? &IsLineOfThree) || IsLineOfThree.(forward_slash_diagonal) || IsLineOfThree.(backward_slash_diagonal)
     end
 
@@ -59,7 +77,15 @@ module NoughtsAndCrosses
 
     def _print_grid
       moves.each_row.map do |row|
-        row.map {|content| content.nil? ? " " : content }
+        row.map do |_position, content|
+          if content.null_mark?
+            ' '
+          elsif content == Nought
+            '0'
+          else
+            'X'
+          end
+        end
       end.map(&:join).join("|\n|")
     end
   end
