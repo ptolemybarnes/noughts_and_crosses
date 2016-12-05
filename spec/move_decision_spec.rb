@@ -23,7 +23,7 @@ module NoughtsAndCrosses
 
     describe 'a winning sequence' do
       it 'plays its first move in a corner' do
-        grid = create_grid(<<~EXAMPLE
+        grid = parse_grid(<<~EXAMPLE
           -----
           |   |
           |   |
@@ -32,24 +32,24 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid)).to eq Move.new(BOTTOM_LEFT, Nought)
+        expect(decision.make(grid, Nought)).to eq Move.new(BOTTOM_LEFT, Nought)
       end
 
       it 'makes its second move in an adjacent corner' do
-        grid = create_grid(<<~EXAMPLE
+        grid = parse_grid(<<~EXAMPLE
           -----
-          | X |
+          | 0 |
           |   |
-          |0  |
+          |X  |
           -----
         EXAMPLE
         )
 
-        expect(decision.make(grid)).to eq Move.new(TOP_LEFT, Nought)
+        expect(decision.make(grid, Cross)).to eq Move.new(TOP_LEFT, Cross)
       end
 
       it 'goes for a winning move if available' do
-        grid = create_grid(<<~EXAMPLE
+        grid = parse_grid(<<~EXAMPLE
           -----
           |0XX|
           |X0 |
@@ -58,10 +58,10 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid)).to eq Move.new(BOTTOM_RIGHT, Nought)
+        expect(decision.make(grid, Nought)).to eq Move.new(BOTTOM_RIGHT, Nought)
       end
 
-      def create_grid(grid)
+      def parse_grid(grid)
         moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
           row.map.with_index do |mark_string, x|
             mark = [NullMark, Nought, Cross].find {|mark| mark.to_s == mark_string }

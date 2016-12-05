@@ -11,18 +11,19 @@ module NoughtsAndCrosses
       raise YouCantGoThereError if find_move_at(new_move.point)
       raise NotYourTurnError    if last_move && (last_move[1] == new_move.mark)
       moves << new_move
+      self
     end
 
     def fetch(point)
       find_move_at(point) || Move.new(point, NullMark)
     end
 
-    def dup
-      MovesList.new(moves.dup)
-    end
-
     def complete?
       moves.length == MAX_MOVES
+    end
+
+    def dup
+      MovesList.new(moves.dup)
     end
 
     private
