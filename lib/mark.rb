@@ -7,6 +7,10 @@ module NoughtsAndCrosses
     def self.to_s
       '0'
     end
+
+    def self.opponent
+      Cross
+    end
   end
 
   class Cross
@@ -17,6 +21,10 @@ module NoughtsAndCrosses
     def self.to_s
       'X'
     end
+
+    def self.opponent
+      Nought
+    end
   end
 
   class NullMark
@@ -26,6 +34,10 @@ module NoughtsAndCrosses
 
     def self.to_s
       ' '
+    end
+
+    def self.opponent
+      self
     end
   end
 end

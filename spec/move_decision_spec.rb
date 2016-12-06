@@ -6,6 +6,7 @@ require './lib/game'
 require './lib/moves_list'
 require './lib/mark'
 require './lib/grid'
+require './lib/move_decision_strategy'
 
 module NoughtsAndCrosses
   describe MoveDecision do
@@ -72,6 +73,19 @@ module NoughtsAndCrosses
         )
 
         expect(decision.make(grid, Cross)).to eq Move.new(BOTTOM_RIGHT, Cross)
+      end
+
+      it 'makes a splitting move when possible' do
+        grid = parse_grid(<<~EXAMPLE
+          -----
+          |0X |
+          |X  |
+          |0  |
+          -----
+        EXAMPLE
+        )
+
+        expect(decision.make(grid, Nought)).to eq Move.new(MIDDLE, Nought)
       end
 
       def parse_grid(grid)

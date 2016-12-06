@@ -31,7 +31,11 @@ module NoughtsAndCrosses
     attr_reader :moves
 
     def find_move_at(other_point)
-      moves.find {|move| move.point == other_point }
+      available_moves.find {|move| move.point == other_point }
+    end
+
+    def available_moves
+      moves.reject {|move| move.mark.null_mark? }
     end
 
     def last_move

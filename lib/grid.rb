@@ -11,10 +11,18 @@ module NoughtsAndCrosses
       moves.fetch(point)
     end
 
-    def find_line &block
+    def lines
       [ FORWARD_DIAGONAL, BACKWARD_DIAGONAL ].map do |arr|
         arr.map {|point| fetch(point) }
-      end.concat(rows).concat(columns).find &block
+      end.concat(rows.to_a).concat(columns)
+    end
+
+    def cells
+      POINTS.map {|point| fetch(point) }
+    end
+
+    def find_line &block
+      lines.find &block
     end
 
     def print
@@ -24,31 +32,28 @@ module NoughtsAndCrosses
     end
 
     def empty?
-      each_point.all? {|move| move.mark.null_mark? }
+      lines.all? {|line| line.all? {|move| move.mark.null_mark? }}
     end
 
     def dup
       self.class.new(moves.dup)
     end
 
+    def add(move)
+      moves.add(move.point, move.mark)
+      self
+    end
+
     private
 
     attr_reader :moves
 
-    def each_point
-      POINTS.map {|point| fetch(point) }.to_enum
-    end
-
     def rows
-      POINTS.each_slice(3).map do |row|
-        row.map {|point| fetch(point) }
-      end
+      cells.each_slice(3)
     end
 
     def columns
-      rotate(POINTS.each_slice(3).to_a).map do |row|
-        row.map {|point| fetch(point) }
-      end
+      rotate(rows.to_a)
     end
 
     def rotate(two_dimensional_array)
