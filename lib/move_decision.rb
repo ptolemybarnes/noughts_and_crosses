@@ -16,6 +16,8 @@ module NoughtsAndCrosses
 
     private
 
+    attr_reader :grid
+
     def winning_move_for(mark)
       WinningMove.make(grid, mark)
     end
@@ -27,11 +29,5 @@ module NoughtsAndCrosses
     def splitting_move_for(mark)
       SplittingMove.make(grid, mark)
     end
-
-    def other_mark(mark)
-      mark == Nought ? Cross : Nought
-    end
-
-    attr_reader :grid
   end
 end
