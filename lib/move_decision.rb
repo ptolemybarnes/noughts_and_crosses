@@ -14,26 +14,21 @@ module NoughtsAndCrosses
       WinningMove.make(grid, mark) or
         BlockingMove.make(grid, mark) or
           SplittingMove.make(grid, mark) or
-            second_move_for(mark)
+            random_available_move_for(grid, mark)
     end
 
     private
 
     attr_reader :grid
 
-    def opening_move_for(mark)
-      Move.new(Point.new(0, 0), mark)
+    def random_available_move_for(grid, mark)
+      grid.cells.select {|move| move.mark.null_mark? }
+        .map {|available_move| Move.new(available_move.point, mark) }
+        .sample
     end
 
-    def second_move_for(mark)
-      if grid.fetch(Point.middle).mark == mark.opponent
-        Move.new(Point.top_right, mark)
-      else
-        point = [grid.fetch(Point.top_left), grid.fetch(Point.bottom_right)]
-          .select {|move| move.mark.null_mark? }
-          .first.point
-        Move.new(point, mark)
-      end
+    def opening_move_for(mark)
+      Move.new(Point.new(0, 0), mark)
     end
   end
 end

@@ -110,6 +110,22 @@ module NoughtsAndCrosses
         expect(decision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
       end
 
+      it 'plays any available move if no good moves are available' do
+        grid = parse_grid(<<~EXAMPLE
+          -----
+          |X0 |
+          |0X |
+          |0X0|
+          -----
+        EXAMPLE
+        )
+
+        available_moves = [
+          Move.new(Point.top_right, Cross), Move.new(Point.middle_right, Cross)
+        ]
+        expect(available_moves).to include decision.make(grid, Cross)
+      end
+
       def parse_grid(grid)
         moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
           row.map.with_index do |mark_string, x|
