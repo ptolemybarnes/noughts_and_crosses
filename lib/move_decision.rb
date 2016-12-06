@@ -26,10 +26,10 @@ module NoughtsAndCrosses
     end
 
     def second_move_for(mark)
-      if grid.fetch(Point.new(1, 1)).mark == mark.opponent
-        Move.new(Point.new(2, 2), mark)
+      if grid.fetch(Point.middle).mark == mark.opponent
+        Move.new(Point.top_right, mark)
       else
-        Move.new(Point.new(0, 2), mark)
+        Move.new(Point.top_left, mark)
       end
     end
   end

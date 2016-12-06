@@ -1,7 +1,7 @@
 module NoughtsAndCrosses
   class Grid
-    FORWARD_DIAGONAL  = [ Point.new(0, 0), Point.new(1, 1), Point.new(2, 2) ].freeze
-    BACKWARD_DIAGONAL = [ Point.new(2, 0), Point.new(1, 1), Point.new(0, 2) ].freeze
+    FORWARD_DIAGONAL  = [ Point.bottom_left, Point.middle, Point.top_right ].freeze
+    BACKWARD_DIAGONAL = [ Point.top_left, Point.middle, Point.bottom_right ].freeze
 
     def initialize(moves)
       @moves = moves
@@ -18,7 +18,7 @@ module NoughtsAndCrosses
     end
 
     def cells
-      POINTS.map {|point| fetch(point) }
+      Point.all.map {|point| fetch(point) }
     end
 
     def find_line &block

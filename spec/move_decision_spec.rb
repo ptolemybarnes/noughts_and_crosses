@@ -12,16 +12,6 @@ module NoughtsAndCrosses
   describe MoveDecision do
     subject(:decision) { MoveDecision }
 
-    TOP_LEFT      = Point.new(0, 2)
-    TOP_MIDDLE    = Point.new(1, 2)
-    TOP_RIGHT     = Point.new(2, 2)
-    MIDDLE_LEFT   = Point.new(0, 1)
-    MIDDLE        = Point.new(1, 1)
-    MIDDLE_RIGHT  = Point.new(2, 1)
-    BOTTOM_LEFT   = Point.new(0, 0)
-    BOTTOM_MIDDLE = Point.new(1, 0)
-    BOTTOM_RIGHT  = Point.new(2, 0)
-
     describe 'winning when playing first' do
       it 'plays its first move in a corner' do
         grid = parse_grid(<<~EXAMPLE
@@ -33,7 +23,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(BOTTOM_LEFT, Nought)
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.bottom_left, Nought)
       end
 
       context 'when opponent follows up with move outside center' do
@@ -47,7 +37,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(decision.make(grid, Cross)).to eq Move.new(TOP_LEFT, Cross)
+          expect(decision.make(grid, Cross)).to eq Move.new(Point.top_left, Cross)
         end
       end
 
@@ -62,7 +52,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(decision.make(grid, Cross)).to eq Move.new(TOP_RIGHT, Cross)
+          expect(decision.make(grid, Cross)).to eq Move.new(Point.top_right, Cross)
         end
       end
 
@@ -76,7 +66,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(BOTTOM_RIGHT, Nought)
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.bottom_right, Nought)
       end
 
       it "blocks opponent if they're about to win" do
@@ -89,7 +79,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Cross)).to eq Move.new(BOTTOM_RIGHT, Cross)
+        expect(decision.make(grid, Cross)).to eq Move.new(Point.bottom_right, Cross)
       end
 
       it 'makes a splitting move when possible' do
@@ -102,7 +92,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(MIDDLE, Nought)
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
       end
 
       def parse_grid(grid)

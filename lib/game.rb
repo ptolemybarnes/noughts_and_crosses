@@ -1,10 +1,4 @@
 module NoughtsAndCrosses
-  POINTS = [
-    [0, 2], [1, 2], [2, 2],
-    [0, 1], [1, 1], [2, 1],
-    [0, 0], [1, 0], [2, 0]
-  ].map {|coordinate| Point.new(*coordinate) }.freeze
-
   class Game
 
     def initialize
@@ -50,7 +44,7 @@ module NoughtsAndCrosses
 
     def place(mark, point)
       raise YouCantGoThereError.new("The game is over") if over?
-      raise YouCantGoThereError.new("Point #{point} doesn't exist") if !POINTS.include? point
+      raise YouCantGoThereError.new("Point #{point} doesn't exist") if !Point.all.include? point
       moves.add(point, mark)
       self
     end

@@ -10,18 +10,8 @@ module NoughtsAndCrosses
   describe Game do
     let(:game) { Game.new }
 
-    TOP_LEFT      = Point.new(0, 2)
-    TOP_MIDDLE    = Point.new(1, 2)
-    TOP_RIGHT     = Point.new(2, 2)
-    MIDDLE_LEFT   = Point.new(0, 1)
-    MIDDLE        = Point.new(1, 1)
-    MIDDLE_RIGHT  = Point.new(2, 1)
-    BOTTOM_LEFT   = Point.new(0, 0)
-    BOTTOM_MIDDLE = Point.new(1, 0)
-    BOTTOM_RIGHT  = Point.new(2, 0)
-
     it 'placing a 0 on the grid' do
-      game.place_nought_at(MIDDLE)
+      game.place_nought_at(Point.middle)
 
       expect(game.print).to eq(<<~EXAMPLE
         -----
@@ -34,8 +24,8 @@ module NoughtsAndCrosses
     end
 
     it 'placing a 0 followed by an X' do
-      game.place_nought_at(MIDDLE)
-        .place_cross_at(MIDDLE_LEFT)
+      game.place_nought_at(Point.middle)
+        .place_cross_at(Point.middle_left)
 
       expect(game.print).to eq(<<~EXAMPLE
         -----
@@ -54,77 +44,77 @@ module NoughtsAndCrosses
       end
 
       it 'is over when there are 3 noughts horizontally' do
-        game.place_nought_at(MIDDLE)
-          .place_cross_at(BOTTOM_MIDDLE)
-          .place_nought_at(MIDDLE_LEFT)
-          .place_cross_at(BOTTOM_RIGHT)
-          .place_nought_at(MIDDLE_RIGHT)
+        game.place_nought_at(Point.middle)
+          .place_cross_at(Point.bottom_middle)
+          .place_nought_at(Point.middle_left)
+          .place_cross_at(Point.bottom_right)
+          .place_nought_at(Point.middle_right)
 
         expect(game).to be_over
       end
 
       it 'is over when there are 3 crosses vertically' do
-        game.place_cross_at(BOTTOM_LEFT)
-          .place_nought_at(BOTTOM_MIDDLE)
-          .place_cross_at(MIDDLE_LEFT)
-          .place_nought_at(MIDDLE)
-          .place_cross_at(TOP_LEFT)
+        game.place_cross_at(Point.bottom_left)
+          .place_nought_at(Point.bottom_middle)
+          .place_cross_at(Point.middle_left)
+          .place_nought_at(Point.middle)
+          .place_cross_at(Point.top_left)
 
         expect(game).to be_over
       end
     end
 
     it 'is over when there are 3 crosses diagonally forward (/)' do
-      game.place_cross_at(BOTTOM_LEFT)
-        .place_nought_at(BOTTOM_MIDDLE)
-        .place_cross_at(MIDDLE)
-      game.place_nought_at(BOTTOM_RIGHT)
-      game.place_cross_at(TOP_RIGHT)
+      game.place_cross_at(Point.bottom_left)
+        .place_nought_at(Point.bottom_middle)
+        .place_cross_at(Point.middle)
+      game.place_nought_at(Point.bottom_right)
+      game.place_cross_at(Point.top_right)
 
       expect(game).to be_over
     end
 
     it 'is over when there are 3 noughts diagonally backward (\)' do
-      game.place_nought_at(BOTTOM_RIGHT)
-        .place_cross_at(BOTTOM_MIDDLE)
-        .place_nought_at(MIDDLE)
-        .place_cross_at(BOTTOM_LEFT)
-        .place_nought_at(TOP_LEFT)
+      game.place_nought_at(Point.bottom_right)
+        .place_cross_at(Point.bottom_middle)
+        .place_nought_at(Point.middle)
+        .place_cross_at(Point.bottom_left)
+        .place_nought_at(Point.top_left)
 
       expect(game).to be_over
     end
 
     it 'is over when the grid is full but there is no winner' do
-      game.place_nought_at(TOP_MIDDLE)
-        .place_cross_at(BOTTOM_LEFT)
-        .place_nought_at(BOTTOM_RIGHT)
-        .place_cross_at(MIDDLE_RIGHT)
-        .place_nought_at(MIDDLE)
-        .place_cross_at(BOTTOM_MIDDLE)
-        .place_nought_at(TOP_RIGHT)
-        .place_cross_at(TOP_LEFT)
-        .place_nought_at(MIDDLE_LEFT)
+      game.place_nought_at(Point.top_middle)
+        .place_cross_at(Point.bottom_left)
+        .place_nought_at(Point.bottom_right)
+        .place_cross_at(Point.middle_right)
+        .place_nought_at(Point.middle)
+        .place_cross_at(Point.bottom_middle)
+        .place_nought_at(Point.top_right)
+        .place_cross_at(Point.top_left)
+        .place_nought_at(Point.middle_left)
 
       expect(game).to be_over
     end
 
     describe "rule violations" do
       it "doesn't allow two 0s to be placed consecutively" do
-        game.place_nought_at(MIDDLE)
+        game.place_nought_at(Point.middle)
 
-        expect { game.place_nought_at(TOP_RIGHT) }.to raise_error(NotYourTurnError)
+        expect { game.place_nought_at(Point.top_right) }.to raise_error(NotYourTurnError)
       end
 
       it "doesn't allow two crosses to be placed consecutively" do
-        game.place_cross_at(MIDDLE)
+        game.place_cross_at(Point.middle)
 
-        expect { game.place_cross_at(TOP_LEFT) }.to raise_error(NotYourTurnError)
+        expect { game.place_cross_at(Point.top_left) }.to raise_error(NotYourTurnError)
       end
 
       it "doesn't allow marks in an occupied location" do
-        game.place_cross_at(MIDDLE)
+        game.place_cross_at(Point.middle)
 
-        expect { game.place_nought_at(MIDDLE) }.to raise_error(YouCantGoThereError)
+        expect { game.place_nought_at(Point.middle) }.to raise_error(YouCantGoThereError)
       end
 
       it "doesn't allow marks in a location off the grid" do
@@ -132,13 +122,13 @@ module NoughtsAndCrosses
       end
 
       it "doesn't allow further moves when the game is over" do
-        game.place_nought_at(MIDDLE)
-          .place_cross_at(BOTTOM_MIDDLE)
-          .place_nought_at(MIDDLE_LEFT)
-          .place_cross_at(BOTTOM_RIGHT)
-          .place_nought_at(MIDDLE_RIGHT)
+        game.place_nought_at(Point.middle)
+          .place_cross_at(Point.bottom_middle)
+          .place_nought_at(Point.middle_left)
+          .place_cross_at(Point.bottom_right)
+          .place_nought_at(Point.middle_right)
 
-        expect { game.place_cross_at(TOP_LEFT) }.to raise_error(YouCantGoThereError)
+        expect { game.place_cross_at(Point.top_left) }.to raise_error(YouCantGoThereError)
       end
     end
   end
