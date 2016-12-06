@@ -6,8 +6,7 @@ module NoughtsAndCrosses
       @moves = moves
     end
 
-    def add(point, mark)
-      new_move = Move.new(point, mark)
+    def add(new_move)
       raise YouCantGoThereError if find_move_at(new_move.point)
       raise NotYourTurnError    if last_move && (last_move[1] == new_move.mark)
       moves << new_move

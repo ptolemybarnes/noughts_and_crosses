@@ -3,7 +3,7 @@ module NoughtsAndCrosses
     FORWARD_DIAGONAL  = [ Point.bottom_left, Point.middle, Point.top_right ].freeze
     BACKWARD_DIAGONAL = [ Point.top_left, Point.middle, Point.bottom_right ].freeze
 
-    def initialize(moves)
+    def initialize(moves = MovesList.new)
       @moves = moves
     end
 
@@ -32,7 +32,11 @@ module NoughtsAndCrosses
     end
 
     def empty?
-      lines.all? {|line| line.all? {|move| move.mark.null_mark? }}
+      cells.all? {|move| move.mark.null_mark? }
+    end
+
+    def full?
+      cells.none? {|move| move.mark.null_mark? }
     end
 
     def dup
@@ -40,7 +44,7 @@ module NoughtsAndCrosses
     end
 
     def add(move)
-      moves.add(move.point, move.mark)
+      moves.add(move)
       self
     end
 

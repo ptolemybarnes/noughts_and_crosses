@@ -1,8 +1,9 @@
 module NoughtsAndCrosses
   class Game
+    WINNING_LINE_LENGTH = 3
 
     def initialize
-      @moves = MovesList.new
+      @grid = Grid.new
     end
 
     def place_nought_at(point)
@@ -20,37 +21,29 @@ module NoughtsAndCrosses
     end
 
     def over?
-      won? || moves.complete?
+      won? || grid.full?
     end
 
     private
 
-    attr_reader :moves
+    attr_reader :grid
 
     def won?
-      !winner.nil?
-    end
-
-    def winner
-      winning_line.first[1] if winning_line
+      !winning_line.nil?
     end
 
     def winning_line
-      grid.find_line do |row|
-        compacted_row = row.reject {|move| move.mark.null_mark? }
-        compacted_row.length == 3 && compacted_row.uniq {|move| move.mark }.one?
+      grid.find_line do |line|
+        compacted_line = line.reject {|move| move.mark.null_mark? }
+        compacted_line.length == WINNING_LINE_LENGTH && compacted_line.uniq {|move| move.mark }.one?
       end
     end
 
     def place(mark, point)
       raise YouCantGoThereError.new("The game is over") if over?
       raise YouCantGoThereError.new("Point #{point} doesn't exist") if !Point.all.include? point
-      moves.add(point, mark)
+      grid.add(Move.new(point, mark))
       self
-    end
-
-    def grid
-      Grid.new(moves.dup)
     end
   end
 
