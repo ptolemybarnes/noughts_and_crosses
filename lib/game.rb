@@ -6,12 +6,11 @@ module NoughtsAndCrosses
       @grid = Grid.new
     end
 
-    def place_nought_at(point)
-      place(Nought, point)
-    end
-
-    def place_cross_at(point)
-      place(Cross, point)
+    def play(move)
+      raise YouCantGoThereError.new("The game is over") if over?
+      raise YouCantGoThereError.new("Point #{move.point} doesn't exist") if !Point.all.include? move.point
+      grid.add(move)
+      self
     end
 
     def print
@@ -37,13 +36,6 @@ module NoughtsAndCrosses
         compacted_line = line.reject {|move| move.mark.null_mark? }
         compacted_line.length == WINNING_LINE_LENGTH && compacted_line.uniq {|move| move.mark }.one?
       end
-    end
-
-    def place(mark, point)
-      raise YouCantGoThereError.new("The game is over") if over?
-      raise YouCantGoThereError.new("Point #{point} doesn't exist") if !Point.all.include? point
-      grid.add(Move.new(point, mark))
-      self
     end
   end
 
