@@ -29,7 +29,10 @@ module NoughtsAndCrosses
       if grid.fetch(Point.middle).mark == mark.opponent
         Move.new(Point.top_right, mark)
       else
-        Move.new(Point.top_left, mark)
+        point = [grid.fetch(Point.top_left), grid.fetch(Point.bottom_right)]
+          .select {|move| move.mark.null_mark? }
+          .first.point
+        Move.new(point, mark)
       end
     end
   end

@@ -27,7 +27,7 @@ module NoughtsAndCrosses
       end
 
       context 'when opponent follows up with move outside center' do
-        it 'makes its second move in an adjacent corner' do
+        it 'makes its second move in either adjacent corner' do
           grid = parse_grid(<<~EXAMPLE
             -----
             | 0 |
@@ -38,6 +38,21 @@ module NoughtsAndCrosses
           )
 
           expect(decision.make(grid, Cross)).to eq Move.new(Point.top_left, Cross)
+        end
+
+        context 'the follow-up move is in an adjacent corner' do
+          it 'makes its second move in the other adjacent corner' do
+            grid = parse_grid(<<~EXAMPLE
+              -----
+              |0  |
+              |   |
+              |X  |
+              -----
+            EXAMPLE
+            )
+
+            expect(decision.make(grid, Cross)).to eq Move.new(Point.bottom_right, Cross)
+          end
         end
       end
 

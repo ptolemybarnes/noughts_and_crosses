@@ -1,6 +1,7 @@
 module NoughtsAndCrosses
   class Game
     WINNING_LINE_LENGTH = 3
+    attr_reader :grid
 
     def initialize
       @grid = Grid.new
@@ -24,8 +25,6 @@ module NoughtsAndCrosses
     end
 
     private
-
-    attr_reader :grid
 
     def won?
       !winning_line.nil?
