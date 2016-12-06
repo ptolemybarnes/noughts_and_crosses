@@ -26,9 +26,11 @@ module NoughtsAndCrosses
     end
 
     def print
+      "-----\n|" +
       rows.map do |row|
         row.map { |move| move.mark.to_s }
-      end.map(&:join).join("|\n|")
+      end.map(&:join).join("|\n|") +
+      "|\n-----\n"
     end
 
     def empty?

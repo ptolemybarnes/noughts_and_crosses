@@ -51,8 +51,6 @@ module NoughtsAndCrosses
       splitting_moves_for(mark).first
     end
 
-    private
-
     def splitting_moves_for(mark)
       grid.cells.select do |move|
         move.mark.null_mark?
@@ -64,6 +62,40 @@ module NoughtsAndCrosses
         winning_points.count > 1
       end.map do |_winning_points, move|
         move
+      end
+    end
+  end
+
+  # finds a move that gains 'tempo' (from chess). Sets up both a splitting and blocking move
+  class GainTempoMove < MoveDecisionStrategy
+
+    def make(mark)
+      tempo_gaining_moves_for(mark).first
+    end
+
+    private
+
+    def tempo_gaining_moves_for(mark)
+      outcomes = grid.cells.select do |move|
+        move.mark.null_mark?
+      end.map do |null_move|
+        move = Move.new(null_move.point, mark)
+        [grid.dup.add(move), null_move.point]
+      end.select do |possible_grid, point|
+        BlockingMove.make(possible_grid, mark.opponent)
+      end.select do |possible_grid, point|
+        BlockingMove.make(possible_grid, mark.opponent)
+      end.select do |possible_grid, point|
+        blocking_move = BlockingMove.make(possible_grid, mark.opponent)
+        new_grid = possible_grid.dup.add(blocking_move)
+        SplittingMove.make(new_grid, mark)
+      end.select do |possible_grid, point|
+        blocking_move = BlockingMove.make(possible_grid, mark.opponent)
+        new_grid = possible_grid.dup.add(blocking_move)
+        new_grid.add(SplittingMove.make(new_grid, mark))
+        WinningMove.make(new_grid, mark.opponent).nil?
+      end.map do |_, point|
+        Move.new(point, mark)
       end
     end
   end

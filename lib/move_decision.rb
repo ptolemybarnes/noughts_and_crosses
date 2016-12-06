@@ -11,10 +11,14 @@ module NoughtsAndCrosses
 
     def make(mark)
       return opening_move_for(mark) if grid.empty?
+      return opposite_corner_move(mark) if grid.cells.find do |move|
+        move.point == Point.middle && move.mark == mark.opponent
+      end
       WinningMove.make(grid, mark) or
         BlockingMove.make(grid, mark) or
           SplittingMove.make(grid, mark) or
-            random_available_move_for(grid, mark)
+            GainTempoMove.make(grid, mark) or
+                random_available_move_for(grid, mark)
     end
 
     private
@@ -28,7 +32,11 @@ module NoughtsAndCrosses
     end
 
     def opening_move_for(mark)
-      Move.new(Point.new(0, 0), mark)
+      Move.new(Point.bottom_left, mark)
+    end
+
+    def opposite_corner_move(mark)
+      Move.new(Point.top_right, mark)
     end
   end
 end

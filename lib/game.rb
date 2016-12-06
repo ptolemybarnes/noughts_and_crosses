@@ -15,9 +15,7 @@ module NoughtsAndCrosses
     end
 
     def print
-        "-----\n|" +
-        grid.print +
-        "|\n-----\n"
+      grid.print
     end
 
     def over?
