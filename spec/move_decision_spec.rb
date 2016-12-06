@@ -22,7 +22,7 @@ module NoughtsAndCrosses
     BOTTOM_MIDDLE = Point.new(1, 0)
     BOTTOM_RIGHT  = Point.new(2, 0)
 
-    describe 'a winning sequence' do
+    describe 'winning when playing first' do
       it 'plays its first move in a corner' do
         grid = parse_grid(<<~EXAMPLE
           -----
@@ -36,17 +36,34 @@ module NoughtsAndCrosses
         expect(decision.make(grid, Nought)).to eq Move.new(BOTTOM_LEFT, Nought)
       end
 
-      it 'makes its second move in an adjacent corner' do
-        grid = parse_grid(<<~EXAMPLE
-          -----
-          | 0 |
-          |   |
-          |X  |
-          -----
-        EXAMPLE
-        )
+      context 'when opponent follows up with move outside center' do
+        it 'makes its second move in an adjacent corner' do
+          grid = parse_grid(<<~EXAMPLE
+            -----
+            | 0 |
+            |   |
+            |X  |
+            -----
+          EXAMPLE
+          )
 
-        expect(decision.make(grid, Cross)).to eq Move.new(TOP_LEFT, Cross)
+          expect(decision.make(grid, Cross)).to eq Move.new(TOP_LEFT, Cross)
+        end
+      end
+
+      context 'when opponent follows up with move in the center' do
+        it 'makes its second move in the opposite corner' do
+          grid = parse_grid(<<~EXAMPLE
+            -----
+            |   |
+            | 0 |
+            |X  |
+            -----
+          EXAMPLE
+          )
+
+          expect(decision.make(grid, Cross)).to eq Move.new(TOP_RIGHT, Cross)
+        end
       end
 
       it 'goes for a winning move if available' do

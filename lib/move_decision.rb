@@ -10,24 +10,27 @@ module NoughtsAndCrosses
     end
 
     def make(mark)
-      return Move.new(Point.new(0, 0), mark) if grid.empty?
-      winning_move_for(mark) || blocking_move_for(mark) || splitting_move_for(mark) || Move.new(Point.new(0, 2), mark)
+      return opening_move_for(mark) if grid.empty?
+      WinningMove.make(grid, mark) or
+        BlockingMove.make(grid, mark) or
+          SplittingMove.make(grid, mark) or
+            second_move_for(mark)
     end
 
     private
 
     attr_reader :grid
 
-    def winning_move_for(mark)
-      WinningMove.make(grid, mark)
+    def opening_move_for(mark)
+      Move.new(Point.new(0, 0), mark)
     end
 
-    def blocking_move_for(mark)
-      BlockingMove.make(grid, mark)
-    end
-
-    def splitting_move_for(mark)
-      SplittingMove.make(grid, mark)
+    def second_move_for(mark)
+      if grid.fetch(Point.new(1, 1)).mark == mark.opponent
+        Move.new(Point.new(2, 2), mark)
+      else
+        Move.new(Point.new(0, 2), mark)
+      end
     end
   end
 end
