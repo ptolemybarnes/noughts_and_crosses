@@ -148,7 +148,21 @@ module NoughtsAndCrosses
       end
 
       context "when the opponent starts in the middle" do
-        it "plays a corner move"
+        it "plays a corner move" do
+          grid = parse_grid(<<~EXAMPLE
+            -----
+            |   |
+            | X |
+            |   |
+            -----
+          EXAMPLE
+          )
+
+          corner_moves = [
+            Point.top_left, Point.top_right, Point.bottom_left, Point.bottom_right
+          ].map {|point| Move.new(point, Nought) }
+          expect(corner_moves).to include MoveDecision.make(grid, Nought)
+        end
       end
     end
 
