@@ -1,7 +1,12 @@
 module NoughtsAndCrosses
   class MoveDecisionStrategy
+
+    def self.sample(grid, mark)
+      make(grid, mark).sample
+    end
+
     def self.make(grid, mark)
-      new(grid).make(mark).sample
+      new(grid).make(mark)
     end
 
     def initialize(grid)
@@ -13,7 +18,7 @@ module NoughtsAndCrosses
     attr_reader :grid
   end
 
-  class PossibleMove < MoveDecisionStrategy
+  class PossibleMoves < MoveDecisionStrategy
 
     def make(mark)
       possible_grids_with_moves(mark)
@@ -28,8 +33,8 @@ module NoughtsAndCrosses
     end
   end
 
-  # finds a 'winning move', a move that creates a line of 3
-  class WinningMove < MoveDecisionStrategy
+  # finds 'winning moves', moves that creates a line of 3
+  class WinningMoves < MoveDecisionStrategy
     def make(mark)
       winning_move_points_for(mark).map {|point| Move.new(point, mark) }
     end
@@ -49,29 +54,29 @@ module NoughtsAndCrosses
     end
   end
 
-  # finds a 'blocking move', a move that stops opponent winning on next turn
-  class BlockingMove < MoveDecisionStrategy
+  # finds 'blocking moves', moves that stops opponent winning on next turn
+  class BlockingMoves < MoveDecisionStrategy
     def make(mark)
-      move = WinningMove.make(grid, mark.opponent)
+      move = WinningMoves.sample(grid, mark.opponent)
       move.nil? ? [] : [ Move.new(move.point, mark) ]
     end
   end
 
-  # finds a 'spitting move', a move that allows certain victory on the next turn.
-  class SplittingMove < MoveDecisionStrategy
+  # finds 'spitting moves', moves that allows certain victory on the next turn.
+  class SplittingMoves < MoveDecisionStrategy
     def make(mark)
       splitting_moves_for(mark)
     end
 
     def splitting_moves_for(mark)
-      PossibleMove.new(grid).make(mark).select do |move|
-        WinningMove.new(grid.add(move)).winning_move_points_for(mark).count > 1
+      PossibleMoves.make(grid, mark).select do |move|
+        WinningMoves.make(grid.add(move), mark).count > 1
       end
     end
   end
 
-  # finds a move that gains 'tempo' (from chess). Sets up both a splitting and blocking move
-  class GainTempoMove < MoveDecisionStrategy
+  # finds moves that gain 'tempo' (from chess). Sets up both a splitting and blocking move
+  class GainTempoMoves < MoveDecisionStrategy
 
     def make(mark)
       tempo_gaining_moves_for(mark)
@@ -80,46 +85,50 @@ module NoughtsAndCrosses
     private
 
     def tempo_gaining_moves_for(mark)
-      PossibleMove.new(grid).make(mark).select do |move|
-        BlockingMove.make(grid.add(move), mark.opponent)
+      PossibleMoves.make(grid, mark).select do |move|
+        BlockingMoves.sample(grid.add(move), mark.opponent)
       end.select do |move|
         possible_grid = grid.add(move)
-        blocking_move = BlockingMove.make(grid.add(move), mark.opponent)
-        SplittingMove.make(possible_grid.add(blocking_move), mark)
+        blocking_move = BlockingMoves.sample(grid.add(move), mark.opponent)
+        SplittingMoves.sample(possible_grid.add(blocking_move), mark)
       end.select do |move|
         possible_grid = grid.add(move)
-        blocking_move = BlockingMove.make(possible_grid, mark.opponent)
+        blocking_move = BlockingMoves.sample(possible_grid, mark.opponent)
         blocked_grid  = possible_grid.add(blocking_move)
-        split_grid    = blocked_grid.add(SplittingMove.make(blocked_grid, mark))
-        WinningMove.make(split_grid, mark.opponent).nil?
+        split_grid    = blocked_grid.add(SplittingMoves.sample(blocked_grid, mark))
+        WinningMoves.sample(split_grid, mark.opponent).nil?
       end
     end
   end
 
   # finds a move that prevents the opponent from making a splitting move.
-  class DefensiveMove < MoveDecisionStrategy
+  class DefensiveMoves < MoveDecisionStrategy
 
     def make(mark)
       defensive_moves_for(mark)
     end
 
     def defensive_moves_for(mark)
-      PossibleMove.new(grid).make(mark).select do |move|
+      PossibleMoves.make(grid, mark).select do |move|
         possible_grid = grid.add(move)
-        blocking_move = BlockingMove.make(possible_grid, mark.opponent)
-        blocking_move && blocking_move != SplittingMove.make(possible_grid, mark.opponent)
+        blocking_move = BlockingMoves.sample(possible_grid, mark.opponent)
+        blocking_move && blocking_move != SplittingMoves.sample(possible_grid, mark.opponent)
       end
     end
   end
 
-  class StartingMove < MoveDecisionStrategy
+  class StartingMoves < MoveDecisionStrategy
 
     def make(mark)
-      return [starting_opening_move_for(mark)]  if grid.empty?
-      opponent_has_played_opener?(mark) ? following_opening_move_for(mark) : []
+      Array(starting_move_for(mark))
     end
 
     private
+
+    def starting_move_for(mark)
+      return starting_opening_move_for(mark) if grid.empty?
+      following_opening_move_for(mark) if opponent_has_played_opener?(mark)
+    end
 
     def opponent_has_played_opener?(mark)
       grid.cells.none? {|move| move.mark == mark } && grid.cells.reject do |move|
@@ -127,28 +136,32 @@ module NoughtsAndCrosses
       end.one?
     end
 
-
     def starting_opening_move_for(mark)
       Move.new(Point.bottom_left, mark)
     end
 
     def following_opening_move_for(mark)
-      return [Move.new(Point.middle, mark)] if grid.empty_at?(Point.middle)
+      return Move.new(Point.middle, mark) if grid.empty_at?(Point.middle)
       [
         Point.top_left, Point.top_right, Point.bottom_left, Point.bottom_right
       ].map {|point| Move.new(point, mark) }
     end
   end
 
-  class OppositeCornerMove < MoveDecisionStrategy
+  class OppositeCornerMoves < MoveDecisionStrategy
     def make(mark)
-      [opposite_corner_move(mark)]
+      Array(opposite_corner_move(mark))
     end
 
     private
 
     def opposite_corner_move(mark)
-      Move.new(Point.top_right, mark) if grid.fetch(Point.top_right).mark.null_mark?
+      is_this_second_move = grid.cells.count {|move| move.mark.null_mark? } == 7
+      is_top_right_empty  = grid.fetch(Point.top_right).mark.null_mark?
+      is_middle_taken_by_opponent = grid.fetch(Point.middle).mark == mark.opponent
+      if is_this_second_move && is_top_right_empty && is_middle_taken_by_opponent
+        Move.new(Point.top_right, mark)
+      end
     end
   end
 end
