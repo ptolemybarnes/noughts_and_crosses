@@ -7,6 +7,7 @@ require './lib/moves_list'
 require './lib/mark'
 require './lib/grid'
 require './lib/move_decision_strategy'
+require './lib/line'
 
 module NoughtsAndCrosses
   describe MoveDecision do
