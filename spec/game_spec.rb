@@ -5,6 +5,7 @@ require './lib/grid'
 require './lib/mark'
 require './lib/moves_list'
 require './lib/move'
+require './lib/line'
 
 module NoughtsAndCrosses
   describe Game do

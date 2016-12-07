@@ -42,7 +42,7 @@ module NoughtsAndCrosses
     end
 
     def following_opening_move_for(mark)
-      return Move.new(Point.middle, mark) if grid.fetch(Point.middle).mark.null_mark?
+      return Move.new(Point.middle, mark) if grid.empty_at?(Point.middle)
       [
         Point.top_left, Point.top_right, Point.bottom_left, Point.bottom_right
       ].map {|point| Move.new(point, mark) }.sample

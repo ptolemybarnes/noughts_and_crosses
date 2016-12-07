@@ -1,6 +1,5 @@
 module NoughtsAndCrosses
   class Game
-    WINNING_LINE_LENGTH = 3
     attr_reader :grid
 
     def initialize
@@ -29,10 +28,7 @@ module NoughtsAndCrosses
     end
 
     def winning_line
-      grid.find_line do |line|
-        compacted_line = line.reject {|move| move.mark.null_mark? }
-        compacted_line.length == WINNING_LINE_LENGTH && compacted_line.uniq {|move| move.mark }.one?
-      end
+      grid.lines.find(&:three_in_a_row?)
     end
   end
 

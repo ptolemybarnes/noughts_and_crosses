@@ -30,7 +30,7 @@ module NoughtsAndCrosses
     end
 
     def winning_move_points_for(mark)
-     winning_lines_for(mark).map do |line|
+      winning_lines_for(mark).map do |line|
         line.find {|move| move.mark.null_mark? }.point
       end
     end
@@ -39,9 +39,7 @@ module NoughtsAndCrosses
 
     def winning_lines_for(mark)
       grid.lines.select do |line|
-        line.count do |move|
-          move.mark == mark
-        end == 2 && line.none? {|move| move.mark == mark.opponent }
+        line.two?(mark) && line.none?(mark.opponent)
       end
     end
   end
@@ -83,13 +81,12 @@ module NoughtsAndCrosses
         BlockingMove.make(possible_grid, mark.opponent)
       end.select do |possible_grid, move|
         blocking_move = BlockingMove.make(possible_grid, mark.opponent)
-        new_grid = possible_grid.dup.add(blocking_move)
-        SplittingMove.make(new_grid, mark)
+        SplittingMove.make(possible_grid.add(blocking_move), mark)
       end.select do |possible_grid, move|
         blocking_move = BlockingMove.make(possible_grid, mark.opponent)
-        new_grid = possible_grid.dup.add(blocking_move)
-        new_grid = new_grid.add(SplittingMove.make(new_grid, mark))
-        WinningMove.make(new_grid, mark.opponent).nil?
+        blocked_grid = possible_grid.add(blocking_move)
+        split_grid = blocked_grid.add(SplittingMove.make(blocked_grid, mark))
+        WinningMove.make(split_grid, mark.opponent).nil?
       end.map do |possible_grid, move|
         move
       end

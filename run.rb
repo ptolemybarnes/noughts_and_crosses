@@ -7,6 +7,7 @@ require './lib/moves_list'
 require './lib/move'
 require './lib/move_decision'
 require './lib/move_decision_strategy.rb'
+require './lib/line'
 
 # COMPUTER GOES SECOND
 # this script randomly generates moves vs the computer to ensure it always wins when it can

@@ -1,4 +1,6 @@
 module NoughtsAndCrosses
+  WINNING_LINE_LENGTH = 3
+
   class Grid
     FORWARD_DIAGONAL  = [ Point.bottom_left, Point.middle, Point.top_right ].freeze
     BACKWARD_DIAGONAL = [ Point.top_left, Point.middle, Point.bottom_right ].freeze
@@ -14,7 +16,7 @@ module NoughtsAndCrosses
     def lines
       [ FORWARD_DIAGONAL, BACKWARD_DIAGONAL ].map do |arr|
         arr.map {|point| fetch(point) }
-      end.concat(rows.to_a).concat(columns)
+      end.concat(rows).concat(columns).map {|moves| Line.new(moves) }
     end
 
     def cells
@@ -34,7 +36,7 @@ module NoughtsAndCrosses
     end
 
     def empty?
-      cells.all? {|move| move.mark.null_mark? }
+      lines.all? {|line| line.all?(NullMark) }
     end
 
     def full?
@@ -45,16 +47,20 @@ module NoughtsAndCrosses
       Grid.new(moves.add(move))
     end
 
+    def empty_at?(point)
+      fetch(point).mark.null_mark?
+    end
+
     private
 
     attr_reader :moves
 
     def rows
-      cells.each_slice(3)
+      cells.each_slice(3).to_a
     end
 
     def columns
-      rotate(rows.to_a)
+      rotate(rows)
     end
 
     def rotate(two_dimensional_array)
