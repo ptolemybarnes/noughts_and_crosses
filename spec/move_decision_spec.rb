@@ -12,7 +12,7 @@ module NoughtsAndCrosses
   describe MoveDecision do
     subject(:decision) { MoveDecision }
 
-    describe 'winning when playing first' do
+    context 'when playing first' do
       it 'plays its first move in a corner' do
         grid = parse_grid(<<~EXAMPLE
           -----
@@ -129,16 +129,37 @@ module NoughtsAndCrosses
         ]
         expect(available_moves).to include decision.make(grid, Cross)
       end
+    end
 
-      def parse_grid(grid)
-        moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
-          row.map.with_index do |mark_string, x|
-            mark = [NullMark, Nought, Cross].find {|mark| mark.to_s == mark_string }
-            Move.new(Point.new(x, y), mark)
-          end
-        end.flatten(1)
-        Grid.new(MovesList.new(moves_list))
+    context 'when playing second' do
+      context "when the opponent starts outside the center" do
+        it "makes its first move in the middle unless the opponent has done so" do
+          grid = parse_grid(<<~EXAMPLE
+            -----
+            |   |
+            |   |
+            |  X|
+            -----
+          EXAMPLE
+          )
+
+          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
+        end
       end
+
+      context "when the opponent starts in the middle" do
+        it "plays a corner move"
+      end
+    end
+
+    def parse_grid(grid)
+      moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
+        row.map.with_index do |mark_string, x|
+          mark = [NullMark, Nought, Cross].find {|mark| mark.to_s == mark_string }
+          Move.new(Point.new(x, y), mark)
+        end
+      end.flatten(1)
+      Grid.new(MovesList.new(moves_list))
     end
   end
 end

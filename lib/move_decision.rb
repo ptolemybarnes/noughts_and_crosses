@@ -10,7 +10,10 @@ module NoughtsAndCrosses
     end
 
     def make(mark)
-      return opening_move_for(mark) if grid.empty?
+      return starting_opening_move_for(mark) if grid.empty?
+      return following_opening_move_for(mark) if grid.cells.reject do |move|
+        move.mark.null_mark? || move.mark == mark
+      end.one?
       WinningMove.make(grid, mark) or
         BlockingMove.make(grid, mark) or
           SplittingMove.make(grid, mark) or
@@ -29,8 +32,12 @@ module NoughtsAndCrosses
         .sample
     end
 
-    def opening_move_for(mark)
+    def starting_opening_move_for(mark)
       Move.new(Point.bottom_left, mark)
+    end
+
+    def following_opening_move_for(mark)
+      Move.new(Point.middle, mark)
     end
 
     def opposite_corner_move_for(mark)
