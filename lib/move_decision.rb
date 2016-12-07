@@ -1,8 +1,19 @@
 module NoughtsAndCrosses
   class MoveDecision
 
+    STRATEGIES = [
+      WinningMove,
+      BlockingMove,
+      SplittingMove,
+      GainTempoMove,
+      StartingMove,
+      OppositeCornerMove,
+      DefensiveMove,
+      MoveDecisionStrategy
+    ]
+
     def self.make(grid, mark)
-      new(grid).make(mark)
+      new(grid).make(mark).first
     end
 
     def initialize(grid)
@@ -10,14 +21,8 @@ module NoughtsAndCrosses
     end
 
     def make(mark)
-        WinningMove.make(grid, mark) or
-          BlockingMove.make(grid, mark) or
-            SplittingMove.make(grid, mark) or
-              GainTempoMove.make(grid, mark) or
-                StartingMove.make(grid, mark) or
-                  OppositeCornerMove.make(grid, mark) or
-                    DefensiveMove.make(grid, mark) or
-                      RandomMove.make(grid, mark)
+      STRATEGIES.find {|strategy| strategy.new(grid).make(mark).any? }
+        .new(grid).make(mark)
     end
 
     private
