@@ -76,13 +76,11 @@ module NoughtsAndCrosses
     private
 
     def tempo_gaining_moves_for(mark)
-      outcomes = grid.cells.select do |move|
+      grid.cells.select do |move|
         move.mark.null_mark?
       end.map do |null_move|
         move = Move.new(null_move.point, mark)
         [grid.dup.add(move), null_move.point]
-      end.select do |possible_grid, point|
-        BlockingMove.make(possible_grid, mark.opponent)
       end.select do |possible_grid, point|
         BlockingMove.make(possible_grid, mark.opponent)
       end.select do |possible_grid, point|
@@ -96,6 +94,28 @@ module NoughtsAndCrosses
         WinningMove.make(new_grid, mark.opponent).nil?
       end.map do |_, point|
         Move.new(point, mark)
+      end
+    end
+  end
+
+  # finds a move that prevents the opponent from making a splitting move.
+  class DefensiveMove < MoveDecisionStrategy
+
+    def make(mark)
+      defensive_moves_for(mark).first
+    end
+
+    def defensive_moves_for(mark)
+      grid.cells.select do |move|
+        move.mark.null_mark?
+      end.map do |null_move|
+        move = Move.new(null_move.point, mark)
+        [grid.dup.add(move), move]
+      end.select do |possible_grid, move|
+        blocking_move = BlockingMove.make(possible_grid, mark.opponent)
+        blocking_move && blocking_move != SplittingMove.make(possible_grid, mark.opponent)
+      end.map do |possible_grid, move|
+        move
       end
     end
   end

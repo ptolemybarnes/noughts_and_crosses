@@ -164,7 +164,26 @@ module NoughtsAndCrosses
           expect(corner_moves).to include MoveDecision.make(grid, Nought)
         end
       end
+
+      context "when the opponent tries a 'triangle split'" do
+        it "plays a side move" do
+          grid = parse_grid(<<~EXAMPLE
+            -----
+            |  X|
+            | 0 |
+            |X  |
+            -----
+          EXAMPLE
+          )
+
+          side_moves = [
+            Point.top_middle, Point.middle_left, Point.middle_right, Point.bottom_middle
+          ].map {|point| Move.new(point, Nought) }
+          expect(side_moves).to include MoveDecision.make(grid, Nought)
+        end
+      end
     end
+
 
     def parse_grid(grid)
       moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|

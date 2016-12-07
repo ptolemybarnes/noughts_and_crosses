@@ -10,14 +10,15 @@ module NoughtsAndCrosses
     end
 
     def make(mark)
-      return starting_opening_move_for(mark) if grid.empty?
+      return starting_opening_move_for(mark)  if grid.empty?
       return following_opening_move_for(mark) if opponent_has_played_opener?(mark)
       WinningMove.make(grid, mark) or
         BlockingMove.make(grid, mark) or
           SplittingMove.make(grid, mark) or
             GainTempoMove.make(grid, mark) or
               opposite_corner_move_for(mark) or
-                random_available_move_for(grid, mark)
+                DefensiveMove.make(grid, mark) or
+                  random_available_move_for(grid, mark)
     end
 
     private
@@ -27,7 +28,7 @@ module NoughtsAndCrosses
     def random_available_move_for(grid, mark)
       grid.cells.select {|move| move.mark.null_mark? }
         .map {|available_move| Move.new(available_move.point, mark) }
-        .sample
+        .first
     end
 
     def opponent_has_played_opener?(mark)
