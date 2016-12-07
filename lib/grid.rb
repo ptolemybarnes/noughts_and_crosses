@@ -46,8 +46,7 @@ module NoughtsAndCrosses
     end
 
     def add(move)
-      moves.add(move)
-      self
+      Grid.new(moves.add(move))
     end
 
     private

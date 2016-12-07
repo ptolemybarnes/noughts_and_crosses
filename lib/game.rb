@@ -10,7 +10,7 @@ module NoughtsAndCrosses
     def play(move)
       raise YouCantGoThereError.new("The game is over") if over?
       raise YouCantGoThereError.new("Point #{move.point} doesn't exist") if !Point.all.include? move.point
-      grid.add(move)
+      @grid = grid.add(move)
       self
     end
 

@@ -88,7 +88,7 @@ module NoughtsAndCrosses
       end.select do |possible_grid, move|
         blocking_move = BlockingMove.make(possible_grid, mark.opponent)
         new_grid = possible_grid.dup.add(blocking_move)
-        new_grid.add(SplittingMove.make(new_grid, mark))
+        new_grid = new_grid.add(SplittingMove.make(new_grid, mark))
         WinningMove.make(new_grid, mark.opponent).nil?
       end.map do |possible_grid, move|
         move

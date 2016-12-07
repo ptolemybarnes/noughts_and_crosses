@@ -9,8 +9,7 @@ module NoughtsAndCrosses
     def add(new_move)
       raise YouCantGoThereError if find_move_at(new_move.point)
       raise NotYourTurnError    if last_move && (last_move[1] == new_move.mark)
-      moves << new_move
-      self
+      MovesList.new(moves.dup << new_move)
     end
 
     def fetch(point)
