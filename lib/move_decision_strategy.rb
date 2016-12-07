@@ -8,20 +8,22 @@ module NoughtsAndCrosses
       @grid = grid
     end
 
-    def make(mark)
-      possible_grids_with_moves(mark).map {|grid, move| move }
-    end
-
     private
 
     attr_reader :grid
+  end
+
+  class PossibleMove < MoveDecisionStrategy
+
+    def make(mark)
+      possible_grids_with_moves(mark)
+    end
 
     def possible_grids_with_moves(mark)
       grid.cells.select do |move|
         move.mark.null_mark?
       end.map do |null_move|
-        move = Move.new(null_move.point, mark)
-        [grid.add(move), move]
+        Move.new(null_move.point, mark)
       end
     end
   end
@@ -62,10 +64,8 @@ module NoughtsAndCrosses
     end
 
     def splitting_moves_for(mark)
-      possible_grids_with_moves(mark).select do |possible_grid, move|
-        WinningMove.new(possible_grid).winning_move_points_for(mark).count > 1
-      end.map do |possible_grid, move|
-        move
+      PossibleMove.new(grid).make(mark).select do |move|
+        WinningMove.new(grid.add(move)).winning_move_points_for(mark).count > 1
       end
     end
   end
@@ -80,18 +80,18 @@ module NoughtsAndCrosses
     private
 
     def tempo_gaining_moves_for(mark)
-      possible_grids_with_moves(mark).select do |possible_grid, move|
-        BlockingMove.make(possible_grid, mark.opponent)
-      end.select do |possible_grid, move|
-        blocking_move = BlockingMove.make(possible_grid, mark.opponent)
+      PossibleMove.new(grid).make(mark).select do |move|
+        BlockingMove.make(grid.add(move), mark.opponent)
+      end.select do |move|
+        possible_grid = grid.add(move)
+        blocking_move = BlockingMove.make(grid.add(move), mark.opponent)
         SplittingMove.make(possible_grid.add(blocking_move), mark)
-      end.select do |possible_grid, move|
+      end.select do |move|
+        possible_grid = grid.add(move)
         blocking_move = BlockingMove.make(possible_grid, mark.opponent)
-        blocked_grid = possible_grid.add(blocking_move)
-        split_grid = blocked_grid.add(SplittingMove.make(blocked_grid, mark))
+        blocked_grid  = possible_grid.add(blocking_move)
+        split_grid    = blocked_grid.add(SplittingMove.make(blocked_grid, mark))
         WinningMove.make(split_grid, mark.opponent).nil?
-      end.map do |possible_grid, move|
-        move
       end
     end
   end
@@ -104,11 +104,10 @@ module NoughtsAndCrosses
     end
 
     def defensive_moves_for(mark)
-      possible_grids_with_moves(mark).select do |possible_grid, move|
+      PossibleMove.new(grid).make(mark).select do |move|
+        possible_grid = grid.add(move)
         blocking_move = BlockingMove.make(possible_grid, mark.opponent)
         blocking_move && blocking_move != SplittingMove.make(possible_grid, mark.opponent)
-      end.map do |possible_grid, move|
-        move
       end
     end
   end
