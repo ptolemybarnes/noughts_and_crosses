@@ -41,10 +41,6 @@ module NoughtsAndCrosses
       cells.none? {|move| move.mark.null_mark? }
     end
 
-    def dup
-      self.class.new(moves.dup)
-    end
-
     def add(move)
       Grid.new(moves.add(move))
     end

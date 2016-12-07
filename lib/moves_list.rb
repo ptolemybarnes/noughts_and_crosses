@@ -20,10 +20,6 @@ module NoughtsAndCrosses
       moves.length == MAX_MOVES
     end
 
-    def dup
-      MovesList.new(moves.dup)
-    end
-
     private
 
     attr_reader :moves
