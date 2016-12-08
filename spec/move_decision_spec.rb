@@ -37,12 +37,12 @@ module NoughtsAndCrosses
             -----
             |   |
             | 0 |
-            |X  |
+            |  X|
             -----
           EXAMPLE
           )
 
-          expect(decision.make(grid, Cross)).to eq [Move.new(Point.top_right, Cross)]
+          expect(decision.make(grid, Cross)).to eq [Move.new(Point.top_left, Cross)]
         end
       end
 

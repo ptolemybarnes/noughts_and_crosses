@@ -88,7 +88,6 @@ module NoughtsAndCrosses
       PossibleMoves.make(grid, mark).select do |move|
         BlockingMoves.sample(grid.add(move), mark.opponent)
       end.select do |move|
-        puts "MOVE: #{move.inspect}"
         # play the move that forced them to block
         possible_grid = grid.add(move)
 
@@ -171,10 +170,16 @@ module NoughtsAndCrosses
 
     def opposite_corner_move(mark)
       is_this_second_move = grid.cells.count {|move| move.mark.null_mark? } == 7
-      is_top_right_empty  = grid.fetch(Point.top_right).mark.null_mark?
       is_middle_taken_by_opponent = grid.fetch(Point.middle).mark == mark.opponent
-      if is_this_second_move && is_top_right_empty && is_middle_taken_by_opponent
-        Move.new(Point.top_right, mark)
+      if is_this_second_move && is_middle_taken_by_opponent
+        move = grid.cells.find {|move| move.mark == mark }
+        point = [
+          [ Point.top_left, Point.bottom_right ],
+          [ Point.top_right, Point.bottom_left ],
+          [ Point.bottom_left, Point.top_right ],
+          [ Point.bottom_right, Point.top_left ]
+        ].find {|p1, p2| p1 == move.point }[1]
+        return Move.new(point, mark)
       end
     end
   end
