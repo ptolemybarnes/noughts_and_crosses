@@ -137,7 +137,9 @@ module NoughtsAndCrosses
     end
 
     def starting_opening_move_for(mark)
-      Move.new(Point.bottom_left, mark)
+      [
+        Point.bottom_left, Point.top_right, Point.top_left, Point.bottom_right
+      ].map {|point| Move.new(point, mark) }
     end
 
     def following_opening_move_for(mark)

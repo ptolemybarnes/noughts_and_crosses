@@ -13,7 +13,11 @@ module NoughtsAndCrosses
     ]
 
     def self.make(grid, mark)
-      new(grid).make(mark).first
+      new(grid).make(mark)
+    end
+
+    def self.sample(grid, mark)
+      make(grid, mark).sample
     end
 
     def initialize(grid)

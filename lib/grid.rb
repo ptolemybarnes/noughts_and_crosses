@@ -10,7 +10,7 @@ module NoughtsAndCrosses
     end
 
     def fetch(point)
-      moves.fetch(point)
+      moves.fetch(point) || Move.new(point, NullMark)
     end
 
     def lines

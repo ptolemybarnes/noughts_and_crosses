@@ -24,7 +24,11 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.bottom_left, Nought)
+        corners = [
+          Point.bottom_left, Point.top_right, Point.top_left, Point.bottom_right
+        ].map {|point| Move.new(point, Nought) }
+
+        expect(decision.make(grid, Nought)).to eq corners
       end
 
       context 'when opponent follows up with move outside center' do
@@ -42,7 +46,7 @@ module NoughtsAndCrosses
             Point.top_left, Point.bottom_right
           ].map {|point| Move.new(point, Cross) }
 
-          expect(tempo_gaining_moves).to include decision.make(grid, Cross)
+          expect(decision.make(grid, Cross)).to eq tempo_gaining_moves
         end
 
         context 'the follow-up move is in an adjacent corner' do
@@ -56,7 +60,7 @@ module NoughtsAndCrosses
             EXAMPLE
             )
 
-            expect(decision.make(grid, Cross)).to eq Move.new(Point.top_right, Cross)
+            expect(decision.make(grid, Cross)).to eq [Move.new(Point.top_right, Cross)]
           end
         end
       end
@@ -72,7 +76,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(decision.make(grid, Cross)).to eq Move.new(Point.top_right, Cross)
+          expect(decision.make(grid, Cross)).to eq [Move.new(Point.top_right, Cross)]
         end
       end
 
@@ -86,7 +90,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.bottom_right, Nought)
+        expect(decision.make(grid, Nought)).to eq Array(Move.new(Point.bottom_right, Nought))
       end
 
       it "blocks opponent if they're about to win" do
@@ -99,7 +103,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Cross)).to eq Move.new(Point.bottom_right, Cross)
+        expect(decision.sample(grid, Cross)).to eq Move.new(Point.bottom_right, Cross)
       end
 
       it 'makes a splitting move when possible' do
@@ -112,7 +116,10 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
+        splitting_moves = [ Point.middle, Point.bottom_right ].map do |point|
+          Move.new(point, Nought)
+        end
+        expect(decision.make(grid, Nought)).to eq splitting_moves
       end
 
       it 'plays any available move if no good moves are available' do
@@ -128,7 +135,7 @@ module NoughtsAndCrosses
         available_moves = [
           Move.new(Point.top_right, Cross), Move.new(Point.middle_right, Cross)
         ]
-        expect(available_moves).to include decision.make(grid, Cross)
+        expect(decision.make(grid, Cross)).to eq available_moves
       end
     end
 
@@ -144,7 +151,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
+          expect(MoveDecision.make(grid, Nought)).to eq [Move.new(Point.middle, Nought)]
         end
       end
 
@@ -162,7 +169,7 @@ module NoughtsAndCrosses
           corner_moves = [
             Point.top_left, Point.top_right, Point.bottom_left, Point.bottom_right
           ].map {|point| Move.new(point, Nought) }
-          expect(corner_moves).to include MoveDecision.make(grid, Nought)
+          expect(MoveDecision.make(grid, Nought)).to eq corner_moves
         end
       end
 
@@ -180,7 +187,7 @@ module NoughtsAndCrosses
           side_moves = [
             Point.top_middle, Point.middle_left, Point.middle_right, Point.bottom_middle
           ].map {|point| Move.new(point, Nought) }
-          expect(side_moves).to include MoveDecision.make(grid, Nought)
+          expect(MoveDecision.make(grid, Nought)).to eq side_moves
         end
       end
     end

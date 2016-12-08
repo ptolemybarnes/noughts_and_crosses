@@ -13,7 +13,7 @@ module NoughtsAndCrosses
     end
 
     def fetch(point)
-      find_move_at(point) || Move.new(point, NullMark)
+      find_move_at(point)
     end
 
     def complete?
