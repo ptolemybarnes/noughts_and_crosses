@@ -88,15 +88,27 @@ module NoughtsAndCrosses
       PossibleMoves.make(grid, mark).select do |move|
         BlockingMoves.sample(grid.add(move), mark.opponent)
       end.select do |move|
+        puts "MOVE: #{move.inspect}"
+        # play the move that forced them to block
         possible_grid = grid.add(move)
-        blocking_move = BlockingMoves.sample(grid.add(move), mark.opponent)
-        SplittingMoves.sample(possible_grid.add(blocking_move), mark)
-      end.select do |move|
-        possible_grid = grid.add(move)
-        blocking_move = BlockingMoves.sample(possible_grid, mark.opponent)
-        blocked_grid  = possible_grid.add(blocking_move)
-        split_grid    = blocked_grid.add(SplittingMoves.sample(blocked_grid, mark))
-        WinningMoves.sample(split_grid, mark.opponent).nil?
+
+        # calculate their blocking move
+        blocking_move = BlockingMoves.make(possible_grid, mark.opponent)
+
+        # play their blocking move
+        blocked_grid = possible_grid.add(blocking_move.first)
+
+        # calculate our splitting move
+        split_moves  = SplittingMoves.make(blocked_grid, mark)
+
+        # we move on if there are no split moves
+        next if split_moves.none?
+
+        # take all split moves.
+        split_moves.reject do |split_move|
+          split_grid = blocked_grid.add(split_move)
+          WinningMoves.make(split_grid, mark.opponent).any?
+        end.any?
       end
     end
   end
