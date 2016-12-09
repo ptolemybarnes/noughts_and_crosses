@@ -1,13 +1,3 @@
-require './lib/move'
-require './lib/move_decision_strategy'
-require './lib/move_decision'
-require './lib/point'
-require './lib/game'
-require './lib/moves_list'
-require './lib/mark'
-require './lib/grid'
-require './lib/line'
-
 module NoughtsAndCrosses
   describe GainTempoMoves do
     subject(:gain_tempo_moves) { described_class }

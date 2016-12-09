@@ -1,12 +1,3 @@
-require 'pry'
-require './lib/point'
-require './lib/game'
-require './lib/grid'
-require './lib/mark'
-require './lib/moves_list'
-require './lib/move'
-require './lib/line'
-
 module NoughtsAndCrosses
   describe Game do
     let(:game) { Game.new }
