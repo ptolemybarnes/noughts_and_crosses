@@ -7,8 +7,8 @@ module NoughtsAndCrosses
     end
 
     def add(new_move)
-      raise YouCantGoThereError if find_move_at(new_move.point)
-      raise NotYourTurnError    if last_move && (last_move.mark == new_move.mark)
+      raise YouCantGoThereError.new("#{new_move.point} is already taken") if find_move_at(new_move.point)
+      raise NotYourTurnError.new("It's not your turn") if last_move && (last_move.mark == new_move.mark)
       MovesList.new(moves.dup << new_move)
     end
 
