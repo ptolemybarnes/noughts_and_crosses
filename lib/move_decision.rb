@@ -2,54 +2,56 @@ module NoughtsAndCrosses
   class MoveDecision
 
     def self.make(grid, mark)
-      IdealMove.make(grid, mark)
+      return Move.new(Point.top_left, mark) if grid.empty?
+      IdealMove.make(Game.new(grid), mark)
     end
 
   end
 
   class IdealMove
 
-    def self.make(grid, mark)
-      new(mark).make(grid, mark)[1]
+    def self.make(game, mark)
+      new(mark).make(game, mark)[1]
     end
 
     def initialize(mark)
-      @max = mark
-      @min = mark.opponent
+      @max    = mark
+      @min    = mark.opponent
+      @ranker = Ranker.new(mark)
     end
 
-    def make(grid, mark)
-      minimax(possible_grids(grid, mark), mark.opponent).max_by {|rank, move| rank }
+    def make(game, mark)
+      minimax(possible_games(game, mark), mark.opponent).max_by {|rank, move| rank }
     end
 
-    def possible_grids(grid, mark)
-      PossibleMoves.make(grid, mark).map do |move|
-        [ grid.add(move), move ]
-      end
+    def possible_games(game, mark)
+      PossibleGames.make(game.grid, mark)
     end
 
     class RankedMove < Struct.new(:rank, :move); end
 
 
-    def minimax(grids_and_moves, next_mark)
-      grids_and_moves.map do |grid, move|
-        game = Game.new(grid)
+    def minimax(possible_games, next_mark)
+      possible_games.map do |game, move|
         if game.over?
-          [ rank(game), move ]
-        elsif next_mark == @max
-          [ minimax(possible_grids(grid, next_mark), next_mark.opponent).map {|rank, move| rank }.max, move ]
-        elsif next_mark == @min
-          [ minimax(possible_grids(grid, next_mark), next_mark.opponent).map {|rank, move| rank }.min, move ]
+          [ @ranker.call(game), move ]
         else
-          raise 'we have a problem'
+          strategy = (next_mark == @max ? :max : :min)
+          [ minimax(possible_games(game, next_mark), next_mark.opponent).map {|rank, move| rank }.send(strategy), move ]
         end
       end
     end
+  end
 
-    def rank(game)
-      if game.won_by?(@max)
+  class Ranker
+    def initialize(mark)
+      @top_mark = mark
+    end
+
+    def call(game)
+      if game.won_by?(@top_mark)
         1
-      elsif game.won_by?(@min)
+      elsif game.won_by?(@top_mark.opponent)
         -1
       else
         0

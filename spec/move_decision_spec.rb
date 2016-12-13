@@ -3,7 +3,7 @@ module NoughtsAndCrosses
     subject(:decision) { MoveDecision }
 
     context 'when playing first' do
-      xit 'plays its first move in a corner' do
+      it 'plays its first move in a corner' do
         grid = parse_grid(<<~EXAMPLE
           -----
           |   |
@@ -13,11 +13,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        corners = [
-          Point.bottom_left, Point.top_right, Point.top_left, Point.bottom_right
-        ].map {|point| Move.new(point, Nought) }
-
-        expect(decision.make(grid, Nought)).to eq corners
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.top_left, Nought)
       end
 
       context 'when opponent follows up with move in the center' do
