@@ -43,14 +43,14 @@ module NoughtsAndCrosses
         expect(game).not_to be_over
       end
 
-      it 'is over when there are 3 noughts horizontally' do
+      it 'is won by Nought when she has 3 noughts horizontally' do
         game.play(nought_move(Point.middle))
           .play(cross_move(Point.bottom_middle))
           .play(nought_move(Point.middle_left))
           .play(cross_move(Point.bottom_right))
           .play(nought_move(Point.middle_right))
 
-        expect(game).to be_over
+        expect(game).to be_won_by(Nought)
       end
 
       it 'is over when there are 3 crosses vertically' do
@@ -99,18 +99,6 @@ module NoughtsAndCrosses
     end
 
     describe "rule violations" do
-      it "doesn't allow two 0s to be placed consecutively" do
-        game.play(nought_move(Point.middle))
-
-        expect { game.play(nought_move(Point.top_right)) }.to raise_error(NotYourTurnError)
-      end
-
-      it "doesn't allow two crosses to be placed consecutively" do
-        game.play(cross_move(Point.middle))
-
-        expect { game.play(cross_move(Point.top_left)) }.to raise_error(NotYourTurnError)
-      end
-
       it "doesn't allow marks in an occupied location" do
         game.play(cross_move(Point.middle))
 

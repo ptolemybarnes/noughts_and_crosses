@@ -8,6 +8,7 @@ require './lib/line'
 require './lib/move_decision_strategy'
 require './lib/move_decision'
 require './lib/player'
+require 'pry'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

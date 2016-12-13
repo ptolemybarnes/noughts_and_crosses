@@ -34,7 +34,7 @@ module NoughtsAndCrosses
   class ComputerPlayer < Player
     def get_move(grid)
       output.puts grid.print
-      MoveDecision.sample(grid, mark)
+      MoveDecision.make(grid, mark)
     end
   end
 

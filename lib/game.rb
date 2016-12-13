@@ -2,8 +2,8 @@ module NoughtsAndCrosses
   class Game
     attr_reader :grid
 
-    def initialize
-      @grid = Grid.new
+    def initialize(grid = Grid.new)
+      @grid = grid
     end
 
     def play(move)
@@ -19,6 +19,10 @@ module NoughtsAndCrosses
 
     def over?
       won? || grid.full?
+    end
+
+    def won_by?(mark)
+      grid.lines.any? {|line| line.all?(mark) }
     end
 
     private

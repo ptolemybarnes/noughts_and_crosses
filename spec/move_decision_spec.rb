@@ -3,7 +3,7 @@ module NoughtsAndCrosses
     subject(:decision) { MoveDecision }
 
     context 'when playing first' do
-      it 'plays its first move in a corner' do
+      xit 'plays its first move in a corner' do
         grid = parse_grid(<<~EXAMPLE
           -----
           |   |
@@ -31,11 +31,11 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(decision.make(grid, Cross)).to eq [Move.new(Point.top_left, Cross)]
+          expect(decision.make(grid, Cross)).to eq Move.new(Point.top_left, Cross)
         end
       end
 
-      it 'goes for a winning move if available' do
+      it 'Nought goes for a winning move if available' do
         grid = parse_grid(<<~EXAMPLE
           -----
           |0XX|
@@ -45,20 +45,33 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Array(Move.new(Point.bottom_right, Nought))
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.bottom_right, Nought)
+      end
+
+      it 'Cross goes for a winning move if available' do
+        grid = parse_grid(<<~EXAMPLE
+          -----
+          |00 |
+          |0XX|
+          |X0X|
+          -----
+        EXAMPLE
+        )
+
+        expect(decision.make(grid, Cross)).to eq Move.new(Point.top_right, Cross)
       end
 
       it "blocks opponent if they're about to win" do
         grid = parse_grid(<<~EXAMPLE
           -----
-          |0X |
-          |X  |
-          |00 |
+          | 0 |
+          |0XX|
+          |XX0|
           -----
         EXAMPLE
         )
 
-        expect(decision.sample(grid, Cross)).to eq Move.new(Point.bottom_right, Cross)
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.top_right, Nought)
       end
 
       it 'makes a splitting move when possible' do
@@ -71,26 +84,7 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        splitting_moves = [ Point.middle, Point.bottom_right ].map do |point|
-          Move.new(point, Nought)
-        end
-        expect(decision.make(grid, Nought)).to eq splitting_moves
-      end
-
-      it 'plays any available move if no good moves are available' do
-        grid = parse_grid(<<~EXAMPLE
-          -----
-          |X0 |
-          |0X |
-          |0X0|
-          -----
-        EXAMPLE
-        )
-
-        available_moves = [
-          Move.new(Point.top_right, Cross), Move.new(Point.middle_right, Cross)
-        ]
-        expect(decision.make(grid, Cross)).to eq available_moves
+        expect(decision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
       end
     end
 
@@ -106,12 +100,12 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(MoveDecision.make(grid, Nought)).to eq [Move.new(Point.middle, Nought)]
+          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
         end
       end
 
       context "when the opponent starts in the middle" do
-        it "plays a corner move" do
+        xit "plays a corner move" do
           grid = parse_grid(<<~EXAMPLE
             -----
             |   |
@@ -121,10 +115,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          corner_moves = [
-            Point.top_left, Point.top_right, Point.bottom_left, Point.bottom_right
-          ].map {|point| Move.new(point, Nought) }
-          expect(MoveDecision.make(grid, Nought)).to eq corner_moves
+          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.top_right, Nought)
         end
       end
 
@@ -139,10 +130,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          side_moves = [
-            Point.top_middle, Point.middle_left, Point.middle_right, Point.bottom_middle
-          ].map {|point| Move.new(point, Nought) }
-          expect(MoveDecision.make(grid, Nought)).to eq side_moves
+          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.top_middle, Nought)
         end
       end
     end
@@ -153,7 +141,7 @@ module NoughtsAndCrosses
           mark = [NullMark, Nought, Cross].find {|mark| mark.to_s == mark_string }
           Move.new(Point.new(x, y), mark)
         end
-      end.flatten(1)
+      end.flatten(1).reject {|move| move.mark.null_mark? }
       Grid.new(MovesList.new(moves_list))
     end
   end

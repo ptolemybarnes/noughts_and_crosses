@@ -41,7 +41,7 @@ module NoughtsAndCrosses
       end
 
       it "gets a move from MoveDecision" do
-        allow(MoveDecision).to receive(:sample).with(grid, Nought).and_return(:move)
+        allow(MoveDecision).to receive(:make).with(grid, Nought).and_return(:move)
 
         expect(computer_player.get_move(grid)).to eq :move
       end

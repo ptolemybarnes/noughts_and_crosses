@@ -23,7 +23,7 @@ module NoughtsAndCrosses
     end
 
     def all?(mark)
-      moves.all? {|move| move.mark == NullMark }
+      moves.all? {|move| move.mark == mark }
     end
 
     private
