@@ -34,7 +34,7 @@ module NoughtsAndCrosses
   class ComputerPlayer < Player
     def get_move(grid)
       output.puts grid.print
-      MoveDecision.make(grid, mark)
+      IdealMove.make(grid, mark)
     end
   end
 

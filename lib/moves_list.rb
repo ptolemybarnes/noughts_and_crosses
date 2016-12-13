@@ -15,10 +15,6 @@ module NoughtsAndCrosses
       find_move_at(point)
     end
 
-    def complete?
-      moves.length == MAX_MOVES
-    end
-
     private
 
     attr_reader :moves
@@ -29,10 +25,6 @@ module NoughtsAndCrosses
 
     def available_moves
       moves.reject {|move| move.mark.null_mark? }
-    end
-
-    def last_move
-      moves.last
     end
   end
 end

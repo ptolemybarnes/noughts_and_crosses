@@ -1,6 +1,6 @@
 module NoughtsAndCrosses
-  describe MoveDecision do
-    subject(:decision) { MoveDecision }
+  describe IdealMove do
+    subject(:decision) { IdealMove }
 
     context 'when playing first' do
       it 'plays its first move in a corner' do
@@ -96,7 +96,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
+          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
         end
       end
 
@@ -111,7 +111,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.top_right, Nought)
+          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.top_right, Nought)
         end
       end
 
@@ -126,7 +126,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(MoveDecision.make(grid, Nought)).to eq Move.new(Point.top_middle, Nought)
+          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.top_middle, Nought)
         end
       end
     end

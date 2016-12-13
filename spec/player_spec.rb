@@ -40,8 +40,8 @@ module NoughtsAndCrosses
         ComputerPlayer.new(Nought, input: input_channel, output: output_channel)
       end
 
-      it "gets a move from MoveDecision" do
-        allow(MoveDecision).to receive(:make).with(grid, Nought).and_return(:move)
+      it "gets a move from IdealMove" do
+        allow(IdealMove).to receive(:make).with(grid, Nought).and_return(:move)
 
         expect(computer_player.get_move(grid)).to eq :move
       end

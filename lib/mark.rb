@@ -35,9 +35,5 @@ module NoughtsAndCrosses
     def self.to_s
       ' '
     end
-
-    def self.opponent
-      self
-    end
   end
 end

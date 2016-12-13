@@ -1,17 +1,9 @@
 module NoughtsAndCrosses
-  class MoveDecision
+  class IdealMove
 
     def self.make(grid, mark)
       return Move.new(Point.top_left, mark) if grid.empty?
-      IdealMove.make(Game.new(grid), mark)
-    end
-
-  end
-
-  class IdealMove
-
-    def self.make(game, mark)
-      new(mark).make(game, mark)[1]
+      new(mark).make(Game.new(grid), mark)[1]
     end
 
     def initialize(mark)
@@ -27,9 +19,6 @@ module NoughtsAndCrosses
     def possible_games(game, mark)
       PossibleGames.make(game.grid, mark)
     end
-
-    class RankedMove < Struct.new(:rank, :move); end
-
 
     def minimax(possible_games, next_mark)
       possible_games.map do |game, move|

@@ -6,7 +6,7 @@ require './lib/moves_list'
 require './lib/move'
 require './lib/line'
 require './lib/possible_games'
-require './lib/move_decision'
+require './lib/ideal_move'
 require './lib/player'
 require 'pry'
 

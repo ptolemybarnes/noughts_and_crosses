@@ -41,10 +41,6 @@ module NoughtsAndCrosses
       Grid.new(moves.add(move))
     end
 
-    def empty_at?(point)
-      fetch(point).mark.null_mark?
-    end
-
     private
 
     attr_reader :moves
