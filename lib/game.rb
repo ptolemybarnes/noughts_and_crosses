@@ -28,11 +28,7 @@ module NoughtsAndCrosses
     private
 
     def won?
-      !winning_line.nil?
-    end
-
-    def winning_line
-      grid.lines.find(&:three_in_a_row?)
+      won_by?(Nought) || won_by?(Cross)
     end
   end
 

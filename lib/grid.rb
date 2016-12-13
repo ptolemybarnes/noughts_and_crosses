@@ -1,6 +1,4 @@
 module NoughtsAndCrosses
-  WINNING_LINE_LENGTH = 3
-
   class Grid
     FORWARD_DIAGONAL  = [ Point.bottom_left, Point.middle, Point.top_right ].freeze
     BACKWARD_DIAGONAL = [ Point.top_left, Point.middle, Point.bottom_right ].freeze
@@ -21,10 +19,6 @@ module NoughtsAndCrosses
 
     def cells
       Point.all.map {|point| fetch(point) }
-    end
-
-    def find_line &block
-      lines.find &block
     end
 
     def print

@@ -1,24 +1,12 @@
 module NoughtsAndCrosses
-  class MoveDecisionStrategy
-
-    def self.sample(grid, mark)
-      make(grid, mark).sample
+  class PossibleGames
+    def initialize(grid)
+      @grid = grid
     end
 
     def self.make(grid, mark)
       new(grid).make(mark)
     end
-
-    def initialize(grid)
-      @grid = grid
-    end
-
-    private
-
-    attr_reader :grid
-  end
-
-  class PossibleGames < MoveDecisionStrategy
 
     def make(mark)
       possible_grids_with_moves(mark)
@@ -32,5 +20,9 @@ module NoughtsAndCrosses
         [ Game.new(grid.add(move)), move ]
       end
     end
+
+    private
+
+    attr_reader :grid
   end
 end
