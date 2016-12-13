@@ -56,6 +56,5 @@ module NoughtsAndCrosses
     def rotate(two_dimensional_array)
       two_dimensional_array.inject {|sum, row| sum.zip(row) }.map(&:flatten)
     end
-
   end
 end
