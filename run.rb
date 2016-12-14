@@ -10,6 +10,7 @@ require './lib/possible_games'
 require './lib/ideal_move'
 require './lib/player'
 require './lib/rank_cache'
+require './lib/ranker'
 # this script runs the game from the command-line
 include NoughtsAndCrosses
 

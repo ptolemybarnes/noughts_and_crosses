@@ -49,11 +49,11 @@ module NoughtsAndCrosses
     end
 
     def find_max(enum)
-      take_until_rank(enum, 1).max_by(&:rank)
+      take_until_rank(enum, Ranker::WINNING_RANK).max_by(&:rank)
     end
 
     def find_min(enum)
-      take_until_rank(enum, -1).min_by(&:rank)
+      take_until_rank(enum, Ranker::LOSING_RANK).min_by(&:rank)
     end
 
     def take_until_rank(enum, break_condition)
@@ -67,22 +67,6 @@ module NoughtsAndCrosses
 
     def rank_cache
       @cache ||= RankCache.new
-    end
-  end
-
-  class Ranker
-    def initialize(mark)
-      @top_mark = mark
-    end
-
-    def call(game)
-      if game.won_by?(@top_mark)
-        1
-      elsif game.won_by?(@top_mark.opponent)
-        -1
-      else
-        0
-      end
     end
   end
 end

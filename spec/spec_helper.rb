@@ -9,6 +9,7 @@ require './lib/possible_games'
 require './lib/ideal_move'
 require './lib/player'
 require './lib/rank_cache'
+require './lib/ranker'
 require 'pry'
 
 RSpec.configure do |config|
