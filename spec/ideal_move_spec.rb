@@ -101,7 +101,7 @@ module NoughtsAndCrosses
       end
 
       context "when the opponent starts in the middle" do
-        xit "plays a corner move" do
+        it "plays a corner move" do
           grid = parse_grid(<<~EXAMPLE
             -----
             |   |
@@ -111,7 +111,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.top_right, Nought)
+          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.top_left, Nought)
         end
       end
 
