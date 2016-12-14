@@ -24,13 +24,40 @@ module NoughtsAndCrosses
     end
 
     def minimax(possible_games, next_mark)
-      possible_games.lazy.map do |game, move|
-        rank = determine_rank_of(game, next_mark)
+      possible_games.lazy.map do |possible_game, move|
+        # we want to cache this. So we need to know if 2 games are equal
+        rank = determine_rank_of(possible_game, next_mark)
         RankedMove.new(rank, move)
       end
     end
 
     def determine_rank_of(game, next_mark)
+       rank_cache.fetch(game, next_mark) do
+         _determine_rank_of(game, next_mark)
+       end
+    end
+
+    def rank_cache
+      @cache ||= RankCache.new
+    end
+
+    class RankCache
+      def initialize
+        @cache = {}
+      end
+
+      def fetch(game, next_mark)
+        hash = [game.print, next_mark].hash
+        if @cache[hash]
+          return @cache[hash]
+        end
+        result = yield
+        @cache[hash] = result
+        result
+      end
+    end
+
+    def _determine_rank_of(game, next_mark)
       if game.over?
         @ranker.call(game)
       else
