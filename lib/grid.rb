@@ -12,8 +12,8 @@ module NoughtsAndCrosses
     end
 
     def lines
-      [FORWARD_DIAGONAL, BACKWARD_DIAGONAL].map do |arr|
-        arr.map { |point| fetch(point) }
+      [FORWARD_DIAGONAL, BACKWARD_DIAGONAL].map do |diagonal|
+        diagonal.map { |point| fetch(point) }
       end.concat(rows).concat(columns).map { |moves| Line.new(moves) }
     end
 

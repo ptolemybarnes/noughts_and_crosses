@@ -5,13 +5,13 @@ module NoughtsAndCrosses
     DRAWING_RANK = 0
 
     def initialize(mark)
-      @top_mark = mark
+      @max_mark = mark
     end
 
     def call(game)
-      if game.won_by?(@top_mark)
+      if game.won_by?(@max_mark)
         WINNING_RANK
-      elsif game.won_by?(@top_mark.opponent)
+      elsif game.won_by?(@max_mark.opponent)
         LOSING_RANK
       else
         DRAWING_RANK

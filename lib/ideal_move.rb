@@ -8,9 +8,8 @@ module NoughtsAndCrosses
     end
 
     def initialize(mark)
-      @max    = mark
-      @min    = mark.opponent
-      @ranker = Ranker.new(mark)
+      @max_mark = mark
+      @ranker   = Ranker.new(mark)
     end
 
     def make(game, mark)
@@ -40,7 +39,7 @@ module NoughtsAndCrosses
       if game.over?
         @ranker.call(game)
       else
-        if next_mark == @max
+        if next_mark == @max_mark
           find_max(minimax(possible_games(game, next_mark), next_mark.opponent)).rank
         else
           find_min(minimax(possible_games(game, next_mark), next_mark.opponent)).rank
@@ -48,21 +47,19 @@ module NoughtsAndCrosses
       end
     end
 
-    def find_max(enum)
-      take_until_rank(enum, Ranker::WINNING_RANK).max_by(&:rank)
+    def find_max(rankable_moves)
+      rank_until(rankable_moves, Ranker::WINNING_RANK).max_by(&:rank)
     end
 
-    def find_min(enum)
-      take_until_rank(enum, Ranker::LOSING_RANK).min_by(&:rank)
+    def find_min(rankable_moves)
+      rank_until(rankable_moves, Ranker::LOSING_RANK).min_by(&:rank)
     end
 
-    def take_until_rank(enum, break_condition)
-      ranks = []
-      enum.each do |ranked_move|
-        ranks << ranked_move
-        break if ranked_move.rank == break_condition
+    def rank_until(rankable_moves, max_or_min_rank_limit)
+      rankable_moves.each_with_object([]) do |rankable_move, ranked_moves|
+        ranked_moves << rankable_move
+        return ranked_moves if rankable_move.rank == max_or_min_rank_limit
       end
-      ranks
     end
 
     def rank_cache
