@@ -5,11 +5,11 @@ require './lib/grid'
 require './lib/mark'
 require './lib/moves_list'
 require './lib/move'
-require './lib/possible_games.rb'
-require './lib/move_decision'
-require './lib/player'
 require './lib/line'
-
+require './lib/possible_games'
+require './lib/ideal_move'
+require './lib/player'
+require './lib/rank_cache'
 # this script runs the game from the command-line
 include NoughtsAndCrosses
 
@@ -60,9 +60,7 @@ until game.over?
   begin
     game.play(players.peek.get_move(game.grid))
     players.next
-  rescue Player::RuleViolationError => error
-    puts "You cannot enter the move '#{error}'"
-  rescue InvalidInputError => error
+  rescue Player::InvalidInputError, YouCantGoThereError => error
     puts "The move '#{error}' was invalid. Please enter a move 'x, y'."
   end
 end

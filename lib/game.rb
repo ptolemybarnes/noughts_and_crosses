@@ -32,6 +32,5 @@ module NoughtsAndCrosses
     end
   end
 
-  class RuleViolationError < StandardError; end
-  class YouCantGoThereError < RuleViolationError; end
+  class YouCantGoThereError < StandardError; end
 end
