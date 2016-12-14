@@ -6,12 +6,13 @@ module NoughtsAndCrosses
 
     def fetch(game, next_mark)
       hash = [game.print, next_mark].hash
-      if @cache[hash]
-        return @cache[hash]
-      end
-      result = yield
-      @cache[hash] = result
-      result
+      return cache[hash] if cache[hash]
+      rank = yield
+      cache[hash] = rank
     end
+
+    private
+
+    attr_reader :cache
   end
 end
