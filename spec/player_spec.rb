@@ -14,13 +14,13 @@ module NoughtsAndCrosses
         HumanPlayer.new(Nought, input: input_channel, output: output_channel)
       end
 
-      it "takes the coordinates of a point and creates a move" do
+      it 'takes the coordinates of a point and creates a move' do
         allow(input_channel).to receive(:gets).and_return('0, 0')
 
         expect(human_player.get_move(grid)).to eq Move.new(Point.new(0, 0), Nought)
       end
 
-      it "validates that the input received is a possible point location" do
+      it 'validates that the input received is a possible point location' do
         allow(input_channel).to receive(:gets).and_return('0')
 
         expect { human_player.get_move(grid) }.to raise_error InvalidInputError
@@ -40,7 +40,7 @@ module NoughtsAndCrosses
         ComputerPlayer.new(Nought, input: input_channel, output: output_channel)
       end
 
-      it "gets a move from IdealMove" do
+      it 'gets a move from IdealMove' do
         allow(IdealMove).to receive(:make).with(grid, Nought).and_return(:move)
 
         expect(computer_player.get_move(grid)).to eq :move

@@ -38,7 +38,6 @@ module NoughtsAndCrosses
     end
 
     describe 'Game Over!' do
-
       it 'is not over unless a player has 3 in a row' do
         expect(game).not_to be_over
       end
@@ -98,7 +97,7 @@ module NoughtsAndCrosses
       expect(game).to be_over
     end
 
-    describe "rule violations" do
+    describe 'rule violations' do
       it "doesn't allow marks in an occupied location" do
         game.play(cross_move(Point.middle))
 

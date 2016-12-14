@@ -85,8 +85,8 @@ module NoughtsAndCrosses
     end
 
     context 'when playing second' do
-      context "when the opponent starts outside the center" do
-        it "makes its first move in the middle unless the opponent has done so" do
+      context 'when the opponent starts outside the center' do
+        it 'makes its first move in the middle unless the opponent has done so' do
           grid = parse_grid(<<~EXAMPLE
             -----
             |   |
@@ -100,8 +100,8 @@ module NoughtsAndCrosses
         end
       end
 
-      context "when the opponent starts in the middle" do
-        it "plays a corner move" do
+      context 'when the opponent starts in the middle' do
+        it 'plays a corner move' do
           grid = parse_grid(<<~EXAMPLE
             -----
             |   |
@@ -116,7 +116,7 @@ module NoughtsAndCrosses
       end
 
       context "when the opponent tries a 'triangle split'" do
-        it "plays a side move" do
+        it 'plays a side move' do
           grid = parse_grid(<<~EXAMPLE
             -----
             |  X|
@@ -134,10 +134,10 @@ module NoughtsAndCrosses
     def parse_grid(grid)
       moves_list = grid.scan(/[0X ]/).each_slice(3).to_a.reverse.map.with_index do |row, y|
         row.map.with_index do |mark_string, x|
-          mark = [NullMark, Nought, Cross].find {|mark| mark.to_s == mark_string }
+          mark = [NullMark, Nought, Cross].find { |mark| mark.to_s == mark_string }
           Move.new(Point.new(x, y), mark)
         end
-      end.flatten(1).reject {|move| move.mark.null_mark? }
+      end.flatten(1).reject { |move| move.mark.null_mark? }
       Grid.new(MovesList.new(moves_list))
     end
   end

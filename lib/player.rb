@@ -5,11 +5,11 @@ module NoughtsAndCrosses
       @input  = input
       @output = output
     end
+
     private
 
     attr_reader :mark, :input, :output
   end
-
 
   class HumanPlayer < Player
     def get_move(grid)
@@ -22,7 +22,7 @@ module NoughtsAndCrosses
 
     def get_user_input
       move_points = input.gets.chomp
-      raise InvalidInputError.new(move_points) unless valid_possible_point?(move_points)
+      fail InvalidInputError.new(move_points) unless valid_possible_point?(move_points)
       move_points.split(', ').map(&:to_i)
     end
 

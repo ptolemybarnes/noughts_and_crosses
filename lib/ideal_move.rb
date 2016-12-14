@@ -31,9 +31,9 @@ module NoughtsAndCrosses
     end
 
     def determine_rank_of(game, next_mark)
-       rank_cache.fetch(game, next_mark) do
-         _determine_rank_of(game, next_mark)
-       end
+      rank_cache.fetch(game, next_mark) do
+        _determine_rank_of(game, next_mark)
+      end
     end
 
     def _determine_rank_of(game, next_mark)

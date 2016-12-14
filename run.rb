@@ -21,18 +21,18 @@ class Prompt
 end
 
 MODES = {
-  'Human vs Human'       => [ HumanPlayer.new(Nought, input: Prompt), HumanPlayer.new(Cross, input: Prompt) ],
-  'Human vs Computer'    => [ HumanPlayer.new(Nought, input: Prompt), ComputerPlayer.new(Cross) ],
-  'Computer vs Computer' => [ ComputerPlayer.new(Nought), ComputerPlayer.new(Cross) ]
+  'Human vs Human'       => [HumanPlayer.new(Nought, input: Prompt), HumanPlayer.new(Cross, input: Prompt)],
+  'Human vs Computer'    => [HumanPlayer.new(Nought, input: Prompt), ComputerPlayer.new(Cross)],
+  'Computer vs Computer' => [ComputerPlayer.new(Nought), ComputerPlayer.new(Cross)]
 }
 
 MARKS = {
-  "Nought starts" => Nought,
-  "Cross starts"  => Cross
+  'Nought starts' => Nought,
+  'Cross starts'  => Cross
 }
 
 def present_selection_for(options)
-  selection_number = ""
+  selection_number = ''
   options_range = (0..options.length)
   is_selection_in_options = Regexp.new(/^[#{ options_range.map(&:to_s).join }]$/)
   until selection_number.match(is_selection_in_options)

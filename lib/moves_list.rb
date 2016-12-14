@@ -7,7 +7,7 @@ module NoughtsAndCrosses
     end
 
     def add(new_move)
-      raise YouCantGoThereError.new("#{new_move.point} is already taken") if find_move_at(new_move.point)
+      fail YouCantGoThereError.new("#{new_move.point} is already taken") if find_move_at(new_move.point)
       MovesList.new(moves.dup << new_move)
     end
 
@@ -20,11 +20,11 @@ module NoughtsAndCrosses
     attr_reader :moves
 
     def find_move_at(other_point)
-      available_moves.find {|move| move.point == other_point }
+      available_moves.find { |move| move.point == other_point }
     end
 
     def available_moves
-      moves.reject {|move| move.mark.null_mark? }
+      moves.reject { |move| move.mark.null_mark? }
     end
   end
 end

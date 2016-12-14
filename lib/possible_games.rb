@@ -17,7 +17,7 @@ module NoughtsAndCrosses
         move.mark.null_mark?
       end.map do |null_move|
         move = Move.new(null_move.point, mark)
-        [ Game.new(grid.add(move)), move ]
+        [Game.new(grid.add(move)), move]
       end
     end
 

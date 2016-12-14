@@ -7,8 +7,8 @@ module NoughtsAndCrosses
     end
 
     def play(move)
-      raise YouCantGoThereError.new("The game is over") if over?
-      raise YouCantGoThereError.new("Point #{move.point} doesn't exist") if !Point.all.include? move.point
+      fail YouCantGoThereError.new('The game is over') if over?
+      fail YouCantGoThereError.new("Point #{move.point} doesn't exist") unless Point.all.include? move.point
       @grid = grid.add(move)
       self
     end
@@ -22,7 +22,7 @@ module NoughtsAndCrosses
     end
 
     def won_by?(mark)
-      grid.lines.any? {|line| line.all?(mark) }
+      grid.lines.any? { |line| line.all?(mark) }
     end
 
     private
@@ -34,5 +34,4 @@ module NoughtsAndCrosses
 
   class RuleViolationError < StandardError; end
   class YouCantGoThereError < RuleViolationError; end
-  class NotYourTurnError < RuleViolationError; end
 end
