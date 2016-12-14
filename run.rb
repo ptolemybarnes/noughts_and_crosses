@@ -1,4 +1,3 @@
-require 'pry'
 require './lib/point'
 require './lib/game'
 require './lib/grid'
@@ -11,6 +10,7 @@ require './lib/ideal_move'
 require './lib/player'
 require './lib/rank_cache'
 require './lib/ranker'
+
 # this script runs the game from the command-line
 include NoughtsAndCrosses
 
