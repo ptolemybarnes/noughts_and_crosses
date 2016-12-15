@@ -11,7 +11,6 @@ require './lib/player'
 require './lib/rank_cache'
 require './lib/ranker'
 
-# this script runs the game from the command-line
 include NoughtsAndCrosses
 
 class Prompt
@@ -66,5 +65,13 @@ until game.over?
   end
 end
 
+if game.won_by?(Nought)
+  outcome = 'Nought was the winner.'
+elsif game.won_by?(Cross)
+  outcome = 'Cross was the winner.'
+else
+  outcome = 'It was a tie.'
+end
+
 puts game.print
-puts 'Game over!'
+puts "Game over! #{outcome}"

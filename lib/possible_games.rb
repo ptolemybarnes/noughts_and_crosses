@@ -1,3 +1,4 @@
+# generates the set of possible games from a given grid
 module NoughtsAndCrosses
   class PossibleGames
     def initialize(grid)
@@ -9,10 +10,10 @@ module NoughtsAndCrosses
     end
 
     def make(mark)
-      possible_grids_with_moves(mark)
+      possible_games_with_moves(mark)
     end
 
-    def possible_grids_with_moves(mark)
+    def possible_games_with_moves(mark)
       grid.cells.select do |move|
         move.mark.null_mark?
       end.map do |null_move|

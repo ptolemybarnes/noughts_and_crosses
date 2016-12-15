@@ -1,3 +1,4 @@
+# distinguish the three different kinds of marks and their relationships.
 module NoughtsAndCrosses
   class Nought
     def self.null_mark?

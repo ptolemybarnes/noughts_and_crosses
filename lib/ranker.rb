@@ -1,3 +1,4 @@
+# ranks a game according to whether it was won by a given mark
 module NoughtsAndCrosses
   class Ranker
     WINNING_RANK = 1

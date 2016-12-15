@@ -9,7 +9,7 @@ An unbeatable Tic-Tac-Toe (Noughts and Crosses) program.
 `bundle exec rspec`
 
 ## Run
-`ruby ./run.rb`.
+`ruby ./run.rb`. Enter moves in the form 'x, y'.
 
 ## Design & Lessons
 

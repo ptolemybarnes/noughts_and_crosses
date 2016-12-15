@@ -1,3 +1,4 @@
+# represents a single game of noughts and crosses
 module NoughtsAndCrosses
   class Game
     attr_reader :grid

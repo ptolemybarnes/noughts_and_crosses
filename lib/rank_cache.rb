@@ -1,3 +1,4 @@
+# caches the rank of a given game scenario
 module NoughtsAndCrosses
   class RankCache
     def initialize

@@ -1,3 +1,4 @@
+# allows iteration across the 3x3 grid of moves or empty cells
 module NoughtsAndCrosses
   class Grid
     FORWARD_DIAGONAL  = [Point.bottom_left, Point.middle, Point.top_right].freeze
