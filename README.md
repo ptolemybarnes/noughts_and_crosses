@@ -23,3 +23,10 @@ My second realization was that the algorithm was recalculating for scenarios tha
 
 ## Issues
 At the moment the computer ranks all scenarios that can't be forced by either party towards a victory as the same. In other words, the computer assumes that the opponent will always make the perfect move. Actually some scenarios invite more mistakes than others, even if from the perspective of the perfect player they are the same. The computer might perform better against a human player if it ranked moves with more granularity, perhaps taking into account the proportion of winning/losing scenarios coming off of a branch.
+
+## Feedback
+1. Game is really turn. Lots of untested logic in run.rb.
+2. Game spec needn't repeatedly test that #nought_move / #cross_move works as expected.
+4. require 'pry'
+3. UX: How to enter a move? Where is 0, 0? Make more friendly
+4. Testing run: separating the running of the game from the input/output.

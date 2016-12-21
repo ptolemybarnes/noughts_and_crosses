@@ -23,14 +23,26 @@ module NoughtsAndCrosses
       )
     end
 
-    it 'placing a 0 followed by an X' do
-      game.play(nought_move(Point.middle))
-        .play(cross_move(Point.middle_left))
+    it 'placing a X on the grid' do
+      game.play(cross_move(Point.middle))
 
       expect(game.print).to eq(<<~EXAMPLE
         -----
         |   |
-        |X0 |
+        | X |
+        |   |
+        -----
+      EXAMPLE
+      )
+    end
+
+    it 'placing a 0 on the grid' do
+      game.play(nought_move(Point.middle))
+
+      expect(game.print).to eq(<<~EXAMPLE
+        -----
+        |   |
+        | 0 |
         |   |
         -----
       EXAMPLE
@@ -43,56 +55,67 @@ module NoughtsAndCrosses
       end
 
       it 'is won by Nought when she has 3 noughts horizontally' do
-        game.play(nought_move(Point.middle))
-          .play(cross_move(Point.bottom_middle))
-          .play(nought_move(Point.middle_left))
-          .play(cross_move(Point.bottom_right))
-          .play(nought_move(Point.middle_right))
+        game = create_game(<<~EXAMPLE
+          -----
+          |000|
+          |XX |
+          |   |
+          -----
+        EXAMPLE
+        )
 
         expect(game).to be_won_by(Nought)
       end
 
       it 'is over when there are 3 crosses vertically' do
-        game.play(cross_move(Point.bottom_left))
-          .play(nought_move(Point.bottom_middle))
-          .play(cross_move(Point.middle_left))
-          .play(nought_move(Point.middle))
-          .play(cross_move(Point.top_left))
+        game = create_game(<<~EXAMPLE
+          -----
+          | X0|
+          | X |
+          |0X |
+          -----
+        EXAMPLE
+        )
 
-        expect(game).to be_over
+        expect(game).to be_won_by(Cross)
       end
     end
 
-    it 'is over when there are 3 crosses diagonally forward (/)' do
-      game.play(cross_move(Point.bottom_left))
-        .play(nought_move(Point.bottom_middle))
-        .play(cross_move(Point.middle))
-        .play(nought_move(Point.bottom_right))
-        .play(cross_move(Point.top_right))
+    it 'is won by X when there are 3 Xs diagonally forward (/)' do
+      game = create_game(<<~EXAMPLE
+        -----
+        | 0X|
+        | X |
+        |X0 |
+        -----
+      EXAMPLE
+      )
 
-      expect(game).to be_over
+      expect(game).to be_won_by(Cross)
     end
 
     it 'is over when there are 3 noughts diagonally backward (\)' do
-      game.play(nought_move(Point.bottom_right))
-        .play(cross_move(Point.bottom_middle))
-        .play(nought_move(Point.middle))
-        .play(cross_move(Point.bottom_left))
-        .play(nought_move(Point.top_left))
+      game = create_game(<<~EXAMPLE
+        -----
+        |0XX|
+        | 0 |
+        |XX0|
+        -----
+      EXAMPLE
+      )
 
-      expect(game).to be_over
+      expect(game).to be_won_by(Nought)
     end
 
     it 'is over when the grid is full but there is no winner' do
-      game.play(nought_move(Point.top_middle))
-        .play(cross_move(Point.bottom_left))
-        .play(nought_move(Point.bottom_right))
-        .play(cross_move(Point.middle_right))
-        .play(nought_move(Point.middle))
-        .play(cross_move(Point.bottom_middle))
-        .play(nought_move(Point.top_right))
-        .play(cross_move(Point.top_left))
-        .play(nought_move(Point.middle_left))
+      game = create_game(<<~EXAMPLE
+        -----
+        |X0X|
+        |X00|
+        |0XX|
+        -----
+      EXAMPLE
+      )
 
       expect(game).to be_over
     end
@@ -109,14 +132,24 @@ module NoughtsAndCrosses
       end
 
       it "doesn't allow further moves when the game is over" do
-        game.play(nought_move(Point.middle))
-          .play(cross_move(Point.bottom_middle))
-          .play(nought_move(Point.middle_left))
-          .play(cross_move(Point.bottom_right))
-          .play(nought_move(Point.middle_right))
+        game = create_game(<<~EXAMPLE
+          -----
+          |X0X|
+          |X00|
+          |0XX|
+          -----
+        EXAMPLE
+        )
 
-        expect { game.play(cross_move(Point.top_left)) }.to raise_error(YouCantGoThereError)
+
+        expect do
+          game.play(Move.new(Point.top_left, Nought))
+        end.to raise_error(YouCantGoThereError)
       end
+    end
+
+    def create_game(grid)
+      Game.new(parse_grid(grid))
     end
   end
 end
