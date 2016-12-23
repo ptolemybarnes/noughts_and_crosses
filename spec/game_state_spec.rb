@@ -1,6 +1,6 @@
 module NoughtsAndCrosses
-  describe Game do
-    let(:game) { Game.new }
+  describe GameState do
+    subject(:game) { GameState.new }
 
     def nought_move(point)
       Move.new(point, Nought)

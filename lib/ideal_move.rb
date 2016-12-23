@@ -2,9 +2,9 @@ module NoughtsAndCrosses
   class IdealMove
     class RankedMove < Struct.new(:rank, :move); end
 
-    def self.make(game, mark)
-      return Move.new(Point.top_left, mark) if game.grid.empty?
-      new(mark).make(game, mark).move
+    def self.make(game_state, mark)
+      return Move.new(Point.top_left, mark) if game_state.grid.empty?
+      new(mark).make(game_state, mark).move
     end
 
     def initialize(mark)
@@ -12,37 +12,33 @@ module NoughtsAndCrosses
       @ranker   = Ranker.new(mark)
     end
 
-    def make(game, mark)
-      find_max(minimax(possible_games(game, mark), mark.opponent))
+    def make(game_state, mark)
+      find_max(minimax(game_state.possible_states(mark), mark.opponent))
     end
 
     private
 
-    def possible_games(game, mark)
-      PossibleGames.make(game, mark)
-    end
-
-    def minimax(possible_games, next_mark)
-      possible_games.lazy.map do |possible_game, move|
-        rank = determine_rank_of(possible_game, next_mark)
+    def minimax(possible_game_states, next_mark)
+      possible_game_states.lazy.map do |possible_game_state, move|
+        rank = determine_rank_of(possible_game_state, next_mark)
         RankedMove.new(rank, move)
       end
     end
 
-    def determine_rank_of(game, next_mark)
-      rank_cache.fetch(game, next_mark) do
-        _determine_rank_of(game, next_mark)
+    def determine_rank_of(game_state, next_mark)
+      rank_cache.fetch(game_state, next_mark) do
+        _determine_rank_of(game_state, next_mark)
       end
     end
 
-    def _determine_rank_of(game, next_mark)
-      if game.over?
-        @ranker.call(game)
+    def _determine_rank_of(game_state, next_mark)
+      if game_state.over?
+        @ranker.call(game_state)
       else
         if next_mark == @max_mark
-          find_max(minimax(possible_games(game, next_mark), next_mark.opponent)).rank
+          find_max(minimax(game_state.possible_states(next_mark), next_mark.opponent)).rank
         else
-          find_min(minimax(possible_games(game, next_mark), next_mark.opponent)).rank
+          find_min(minimax(game_state.possible_states(next_mark), next_mark.opponent)).rank
         end
       end
     end

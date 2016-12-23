@@ -1,6 +1,6 @@
 # generates the set of possible games from a given game
 module NoughtsAndCrosses
-  class PossibleGames
+  class PossibleGameStates
     def initialize(game)
       @game = game
     end

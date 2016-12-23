@@ -1,6 +1,6 @@
 # represents a single game of noughts and crosses
 module NoughtsAndCrosses
-  class Game
+  class GameState
     attr_reader :grid
 
     def initialize(grid = Grid.new)
@@ -30,6 +30,10 @@ module NoughtsAndCrosses
       grid.cells.select do |move|
         move.mark.null_mark?
       end.map(&:point)
+    end
+
+    def possible_states(mark)
+      PossibleGameStates.make(self, mark)
     end
 
     private

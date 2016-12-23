@@ -8,6 +8,6 @@ module Helpers
         Move.new(Point.new(x, y), mark)
       end
     end.flatten(1).reject { |move| move.mark.null_mark? }
-    Game.new(Grid.new(MovesList.new(moves_list)))
+    GameState.new(Grid.new(MovesList.new(moves_list)))
   end
 end
