@@ -4,7 +4,7 @@ module NoughtsAndCrosses
 
     context 'when playing first' do
       it 'plays its first move in a corner' do
-        grid = parse_grid(<<~EXAMPLE
+        game = create_game(<<~EXAMPLE
           -----
           |   |
           |   |
@@ -13,12 +13,12 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.top_left, Nought)
+        expect(decision.make(game, Nought)).to eq Move.new(Point.top_left, Nought)
       end
 
       context 'when opponent follows up with move in the center' do
         it 'makes its second move in the opposite corner' do
-          grid = parse_grid(<<~EXAMPLE
+          game = create_game(<<~EXAMPLE
             -----
             |   |
             | 0 |
@@ -27,12 +27,12 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(decision.make(grid, Cross)).to eq Move.new(Point.top_left, Cross)
+          expect(decision.make(game, Cross)).to eq Move.new(Point.top_left, Cross)
         end
       end
 
       it 'Nought goes for a winning move if available' do
-        grid = parse_grid(<<~EXAMPLE
+        game = create_game(<<~EXAMPLE
           -----
           |0XX|
           |X0 |
@@ -41,11 +41,11 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.bottom_right, Nought)
+        expect(decision.make(game, Nought)).to eq Move.new(Point.bottom_right, Nought)
       end
 
       it 'Cross goes for a winning move if available' do
-        grid = parse_grid(<<~EXAMPLE
+        game = create_game(<<~EXAMPLE
           -----
           |00 |
           |0XX|
@@ -54,11 +54,11 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Cross)).to eq Move.new(Point.top_right, Cross)
+        expect(decision.make(game, Cross)).to eq Move.new(Point.top_right, Cross)
       end
 
       it "blocks opponent if they're about to win" do
-        grid = parse_grid(<<~EXAMPLE
+        game = create_game(<<~EXAMPLE
           -----
           | 0 |
           |0XX|
@@ -67,11 +67,11 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.top_right, Nought)
+        expect(decision.make(game, Nought)).to eq Move.new(Point.top_right, Nought)
       end
 
       it 'makes a splitting move when possible' do
-        grid = parse_grid(<<~EXAMPLE
+        game = create_game(<<~EXAMPLE
           -----
           |0X |
           |X  |
@@ -80,14 +80,14 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-        expect(decision.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
+        expect(decision.make(game, Nought)).to eq Move.new(Point.middle, Nought)
       end
     end
 
     context 'when playing second' do
       context 'when the opponent starts outside the center' do
         it 'makes its first move in the middle unless the opponent has done so' do
-          grid = parse_grid(<<~EXAMPLE
+          game = create_game(<<~EXAMPLE
             -----
             |   |
             |   |
@@ -96,13 +96,13 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.middle, Nought)
+          expect(IdealMove.make(game, Nought)).to eq Move.new(Point.middle, Nought)
         end
       end
 
       context 'when the opponent starts in the middle' do
         it 'plays a corner move' do
-          grid = parse_grid(<<~EXAMPLE
+          game = create_game(<<~EXAMPLE
             -----
             |   |
             | X |
@@ -111,13 +111,13 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.top_left, Nought)
+          expect(IdealMove.make(game, Nought)).to eq Move.new(Point.top_left, Nought)
         end
       end
 
       context "when the opponent tries a 'triangle split'" do
         it 'plays a side move' do
-          grid = parse_grid(<<~EXAMPLE
+          game = create_game(<<~EXAMPLE
             -----
             |  X|
             | 0 |
@@ -126,7 +126,7 @@ module NoughtsAndCrosses
           EXAMPLE
           )
 
-          expect(IdealMove.make(grid, Nought)).to eq Move.new(Point.top_middle, Nought)
+          expect(IdealMove.make(game, Nought)).to eq Move.new(Point.top_middle, Nought)
         end
       end
     end

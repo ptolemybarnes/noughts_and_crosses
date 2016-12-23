@@ -1,29 +1,27 @@
-# generates the set of possible games from a given grid
+# generates the set of possible games from a given game
 module NoughtsAndCrosses
   class PossibleGames
-    def initialize(grid)
-      @grid = grid
+    def initialize(game)
+      @game = game
     end
 
-    def self.make(grid, mark)
-      new(grid).make(mark)
+    def self.make(game, mark)
+      new(game).make(mark)
     end
 
     def make(mark)
       possible_games_with_moves(mark)
     end
 
+    private
+
     def possible_games_with_moves(mark)
-      grid.cells.select do |move|
-        move.mark.null_mark?
-      end.map do |null_move|
-        move = Move.new(null_move.point, mark)
-        [Game.new(grid.add(move)), move]
+      game.available_points.map do |point|
+        move = Move.new(point, mark)
+        [game.dup.play(move), move]
       end
     end
 
-    private
-
-    attr_reader :grid
+    attr_reader :game
   end
 end

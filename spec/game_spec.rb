@@ -147,9 +147,5 @@ module NoughtsAndCrosses
         end.to raise_error(YouCantGoThereError)
       end
     end
-
-    def create_game(grid)
-      Game.new(parse_grid(grid))
-    end
   end
 end

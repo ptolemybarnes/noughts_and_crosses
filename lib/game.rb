@@ -26,6 +26,12 @@ module NoughtsAndCrosses
       grid.lines.any? { |line| line.all?(mark) }
     end
 
+    def available_points
+      grid.cells.select do |move|
+        move.mark.null_mark?
+      end.map(&:point)
+    end
+
     private
 
     def won?
