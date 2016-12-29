@@ -1,7 +1,5 @@
 module NoughtsAndCrosses
   class Game
-    MARKS = { nought: Nought, cross: Cross }
-
     def initialize(first_player, second_player, events = {}, game_state = GameState.new)
       @players    = [ first_player, second_player ].cycle
       @events     = Hash.new { Proc.new {} }.merge(events)
@@ -20,8 +18,8 @@ module NoughtsAndCrosses
       self
     end
 
-    def print
-      game_state.print
+    def over?
+      game_state.over?
     end
 
     private

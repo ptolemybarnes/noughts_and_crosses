@@ -10,7 +10,6 @@ module NoughtsAndCrosses
     def play(move)
       fail YouCantGoThereError.new('The game is over') if over?
       fail YouCantGoThereError.new("Point #{move.point} doesn't exist") unless Point.all.include? move.point
-      fail YouCantGoThereError.new("The point #{move.point} is occupied") unless grid.fetch(move.point).mark.null_mark?
       GameState.new(grid.add(move))
     end
 
