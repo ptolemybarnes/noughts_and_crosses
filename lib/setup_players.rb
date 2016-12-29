@@ -1,5 +1,7 @@
 module NoughtsAndCrosses
   class SetupPlayers
+    attr_reader :players
+
     GAME_TYPES = {
       'Human vs Human'       => [ CommandLinePlayer, CommandLinePlayer ],
       'Human vs Computer'    => [ CommandLinePlayer, ComputerPlayer ],
@@ -9,7 +11,7 @@ module NoughtsAndCrosses
 
     MARKS = {
       '0' => Nought,
-      'X'  => Cross
+      'X' => Cross
     }
 
     def initialize
@@ -29,6 +31,7 @@ module NoughtsAndCrosses
     end
 
     def call(input)
+      raise InvalidInputError.new("Selection must be a number") unless input.match(/\d/)
       if @players.empty?
         select_game_type(input.to_i - 1)
       else
@@ -37,8 +40,6 @@ module NoughtsAndCrosses
     end
 
     private
-
-    attr_reader :players
 
     def prompt_for_game_type
       game_types_prompt = GAME_TYPES.keys.map.with_index do |type, index|
@@ -54,16 +55,28 @@ module NoughtsAndCrosses
       "Select the mark of the starting player:\n#{marks_prompt}"
     end
 
-    def select_game_type(selection)
-      @players = GAME_TYPES.to_a[selection]
+    def select_game_type(selection_number)
+      selection = GAME_TYPES.values[selection_number]
+      if selection.nil?
+        raise InvalidInputError.new(
+          "Selection must be a number between 1 and #{GAME_TYPES.to_a.count}"
+        )
+      else
+        @players = selection
+      end
+      self
     end
 
     def select_starting_mark(selection)
-      starting_mark = MARKS.values[selection]
-      @players = @players.zip([starting_mark, starting_mark.opponent]).map do |player, mark|
-        Player.new(mark)
+      selection = MARKS.values[selection]
+      if selection.nil?
+        raise InvalidInputError.new("Selection must be a number between 1 and #{GAME_TYPES.to_a.count}")
+      else
+        @players = @players.zip([selection, selection.opponent]).map do |player, mark|
+          player.new(mark)
+        end
+        self
       end
-      self
     end
   end
 end

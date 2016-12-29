@@ -33,5 +33,19 @@ module NoughtsAndCrosses
 
       expect(setup).to be_ready
     end
+
+    it 'raises an error if the input is not a number' do
+      expect { setup.call("a") }.to raise_error(InvalidInputError)
+    end
+
+    it 'raises an error if user tries to select an invalid game type' do
+      expect { setup.call("10") }.to raise_error(InvalidInputError)
+    end
+
+    it 'raises an error if user tries to select an invalid mark' do
+      setup.call("1")
+
+      expect { setup.call("3") }.to raise_error(InvalidInputError)
+    end
   end
 end

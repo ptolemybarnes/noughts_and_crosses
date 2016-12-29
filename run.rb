@@ -1,3 +1,4 @@
+require 'pry'
 require './lib/point'
 require './lib/game_state'
 require './lib/grid'
@@ -17,7 +18,7 @@ include NoughtsAndCrosses
 
 class Prompt
 
-  def gets
+  def self.gets
     print '=> '
     super.chomp
   end
@@ -27,8 +28,9 @@ end
 setup = SetupPlayers.new
 until setup.ready?
   puts setup.prompt
-  puts setup.call(Prompt.new)
+  setup.call(Prompt.gets)
 end
+first_player, second_player = setup.players
 
 events = {
   game_over: Proc.new do |game_state|
@@ -38,7 +40,7 @@ events = {
   turn_change: Proc.new { |game_state| puts game_state.print }
 }
 
-game = Game.new(setup.first_player, setup.second_player, events)
+game = Game.new(first_player, second_player, events)
 until game.over?
   game.run
 end
