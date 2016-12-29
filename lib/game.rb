@@ -1,0 +1,31 @@
+module NoughtsAndCrosses
+  class Game
+    MARKS = { nought: Nought, cross: Cross }
+
+    def initialize(first_player, second_player, events = {}, game_state = GameState.new)
+      @players    = [ first_player, second_player ].cycle
+      @events     = Hash.new { Proc.new {} }.merge(events)
+      @game_state = game_state
+    end
+
+    def run
+      move = players.peek.get_move(game_state)
+      @game_state = game_state.play(move)
+      if game_state.over?
+        events[:game_over].call(game_state)
+      else
+        events[:turn_change].call(game_state)
+        players.next
+      end
+      self
+    end
+
+    def print
+      game_state.print
+    end
+
+    private
+
+    attr_reader :players, :game_state, :events
+  end
+end

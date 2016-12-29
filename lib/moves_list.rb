@@ -7,7 +7,7 @@ module NoughtsAndCrosses
     end
 
     def add(new_move)
-      fail YouCantGoThereError.new("#{new_move.point} is already taken") if find_move_at(new_move.point)
+      fail YouCantGoThereError.new("#{new_move.point.to_s} is already taken") if find_move_at(new_move.point)
       MovesList.new(moves.dup << new_move)
     end
 

@@ -11,9 +11,9 @@ module NoughtsAndCrosses
     end
 
     it 'placing a 0 on the grid' do
-      game.play(nought_move(Point.middle))
+      new_game = game.play(nought_move(Point.middle))
 
-      expect(game.print).to eq(<<~EXAMPLE
+      expect(new_game.print).to eq(<<~EXAMPLE
         -----
         |   |
         | 0 |
@@ -24,9 +24,9 @@ module NoughtsAndCrosses
     end
 
     it 'placing a X on the grid' do
-      game.play(cross_move(Point.middle))
+      new_game = game.play(cross_move(Point.middle))
 
-      expect(game.print).to eq(<<~EXAMPLE
+      expect(new_game.print).to eq(<<~EXAMPLE
         -----
         |   |
         | X |
@@ -37,9 +37,9 @@ module NoughtsAndCrosses
     end
 
     it 'placing a 0 on the grid' do
-      game.play(nought_move(Point.middle))
+      new_game = game.play(nought_move(Point.middle))
 
-      expect(game.print).to eq(<<~EXAMPLE
+      expect(new_game.print).to eq(<<~EXAMPLE
         -----
         |   |
         | 0 |
@@ -122,9 +122,9 @@ module NoughtsAndCrosses
 
     describe 'rule violations' do
       it "doesn't allow marks in an occupied location" do
-        game.play(cross_move(Point.middle))
+        new_game = game.play(cross_move(Point.middle))
 
-        expect { game.play(nought_move(Point.middle)) }.to raise_error(YouCantGoThereError)
+        expect { new_game.play(nought_move(Point.middle)) }.to raise_error(YouCantGoThereError)
       end
 
       it "doesn't allow marks in a location off the grid" do

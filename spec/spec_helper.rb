@@ -10,6 +10,7 @@ require './lib/ideal_move'
 require './lib/player'
 require './lib/rank_cache'
 require './lib/ranker'
+require './lib/game'
 require 'pry'
 require './spec/helpers'
 

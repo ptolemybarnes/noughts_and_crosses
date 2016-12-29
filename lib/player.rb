@@ -6,12 +6,15 @@ module NoughtsAndCrosses
       @output = output
     end
 
+    def get_move(game)
+    end
+
     private
 
     attr_reader :mark, :input, :output
   end
 
-  class HumanPlayer < Player
+  class CommandLinePlayer < Player
     def get_move(grid)
       output.puts grid.print
       move_points = get_user_input

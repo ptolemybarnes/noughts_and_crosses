@@ -9,9 +9,9 @@ module NoughtsAndCrosses
       allow(output_channel).to receive(:puts)
     end
 
-    describe HumanPlayer do
+    describe CommandLinePlayer do
       let(:human_player) do
-        HumanPlayer.new(Nought, input: input_channel, output: output_channel)
+        CommandLinePlayer.new(Nought, input: input_channel, output: output_channel)
       end
 
       it 'takes the coordinates of a point and creates a move' do

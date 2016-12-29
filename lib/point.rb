@@ -18,6 +18,10 @@ module NoughtsAndCrosses
       other == [x, y]
     end
 
+    def to_s
+      "[#{x}, #{y}]"
+    end
+
     def self.top_left
       new(0, 2)
     end
