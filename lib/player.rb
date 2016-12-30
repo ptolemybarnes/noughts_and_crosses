@@ -16,7 +16,6 @@ module NoughtsAndCrosses
 
   class CommandLinePlayer < Player
     def get_move(grid)
-      output.puts grid.print
       move_points = get_user_input
       Move.new(Point.new(*move_points), mark)
     end
@@ -25,12 +24,7 @@ module NoughtsAndCrosses
 
     def get_user_input
       move_points = input.gets.chomp
-      fail InvalidInputError.new(move_points) unless valid_possible_point?(move_points)
       move_points.split(', ').map(&:to_i)
-    end
-
-    def valid_possible_point?(move_points)
-      move_points.match(/^\d,\s?\d$/)
     end
   end
 

@@ -7,6 +7,10 @@ module NoughtsAndCrosses
     end
 
     def run
+      if start_event = events[:game_start]
+        start_event.call(game_state)
+        events[:game_start] = nil
+      end
       move = players.peek.get_move(game_state)
       @game_state = game_state.play(move)
       if game_state.over?

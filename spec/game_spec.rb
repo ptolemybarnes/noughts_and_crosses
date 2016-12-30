@@ -23,14 +23,26 @@ module NoughtsAndCrosses
     end
 
     describe 'Game Events' do
+      let(:game_start_action)  { double(:game_start_action, call: nil) }
       let(:game_over_action)   { double(:game_over_action, call: nil) }
       let(:turn_change_action) { double(:turn_change_action, call: nil) }
 
       let(:events) do
         {
+          game_start:  Proc.new { game_start_action.call },
           game_over:   Proc.new { game_over_action.call },
           turn_change: Proc.new { turn_change_action.call }
         }
+      end
+
+      it 'triggers a game start event when the game starts' do
+        x_player = instance_double(Player, get_move: Move.new(Point.middle, Cross))
+        o_player = instance_double(Player, get_move: Move.new(Point.top_left, Nought))
+
+        game = Game.new(x_player, o_player, events)
+        2.times { game.run }
+
+        expect(game_start_action).to have_received(:call).once
       end
 
       it 'triggers a game over event when the game is complete' do
