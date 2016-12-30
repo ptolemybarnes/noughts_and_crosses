@@ -26,12 +26,14 @@ module NoughtsAndCrosses
       let(:game_start_action)  { double(:game_start_action, call: nil) }
       let(:game_over_action)   { double(:game_over_action, call: nil) }
       let(:turn_change_action) { double(:turn_change_action, call: nil) }
+      let(:invalid_move_event) { double(:invalid_move_event, call: nil) }
 
       let(:events) do
         {
-          game_start:  Proc.new { game_start_action.call },
-          game_over:   Proc.new { game_over_action.call },
-          turn_change: Proc.new { turn_change_action.call }
+          game_start:   Proc.new { game_start_action.call },
+          game_over:    Proc.new { game_over_action.call },
+          turn_change:  Proc.new { turn_change_action.call },
+          invalid_move: Proc.new { invalid_move_event.call }
         }
       end
 
@@ -70,6 +72,16 @@ module NoughtsAndCrosses
         game.run
 
         expect(turn_change_action).to have_received(:call)
+      end
+
+      it 'triggers an event when an invalid move is entered' do
+        x_player = instance_double(Player, get_move: Move.new(Point.middle, Cross))
+        o_player = instance_double(Player, get_move: Move.new(Point.middle, Nought))
+
+        game = Game.new(x_player, o_player, events)
+        2.times { game.run }
+
+        expect(invalid_move_event).to have_received(:call)
       end
     end
   end

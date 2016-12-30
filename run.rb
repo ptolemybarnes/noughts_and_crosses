@@ -48,14 +48,13 @@ events = {
   turn_change: Proc.new do |game_state|
     system("clear")
     puts game_state.print
+  end,
+  invalid_move: Proc.new do |game_state, error|
+    puts "You can't go there!"
   end
 }
 
 game = Game.new(first_player, second_player, events)
 until game.over?
-  begin
-    game.run
-  rescue YouCantGoThereError
-    puts 'Please enter a valid coordinate, x y'
-  end
+  game.run
 end

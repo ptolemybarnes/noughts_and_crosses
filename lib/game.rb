@@ -7,6 +7,14 @@ module NoughtsAndCrosses
     end
 
     def run
+      begin
+        _run
+      rescue YouCantGoThereError => e
+        events[:invalid_move].call(game_state, e)
+      end
+    end
+
+    def _run
       if start_event = events[:game_start]
         start_event.call(game_state)
         events[:game_start] = nil
