@@ -1,9 +1,8 @@
 module NoughtsAndCrosses
   class Player
-    def initialize(mark, input: STDIN, output: STDOUT)
-      @mark   = mark
-      @input  = input
-      @output = output
+    def initialize(mark, input: STDIN)
+      @mark  = mark
+      @input = input
     end
 
     def get_move(game)
@@ -11,7 +10,7 @@ module NoughtsAndCrosses
 
     private
 
-    attr_reader :mark, :input, :output
+    attr_reader :mark, :input
   end
 
   class CommandLinePlayer < Player
@@ -24,13 +23,15 @@ module NoughtsAndCrosses
 
     def get_user_input
       move_points = input.gets.chomp
-      move_points.split(', ').map(&:to_i)
+      raise InvalidInputError unless move_points.match(/\d,\s?\d/)
+      move_points = move_points.scan(/\d/).map(&:to_i)
+      raise InvalidInputError unless move_points.count == 2
+      move_points
     end
   end
 
   class ComputerPlayer < Player
     def get_move(grid)
-      output.puts grid.print
       IdealMove.make(grid, mark)
     end
   end

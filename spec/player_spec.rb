@@ -2,42 +2,43 @@ require 'pry'
 module NoughtsAndCrosses
   describe 'Players' do
     let(:input_channel)  { instance_double(IO, gets: '1, 1') }
-    let(:output_channel) { instance_double(IO, puts: nil) }
     let(:grid) { instance_double(Grid, print: '') }
-
-    before do
-      allow(output_channel).to receive(:puts)
-    end
 
     describe CommandLinePlayer do
       let(:human_player) do
-        CommandLinePlayer.new(Nought, input: input_channel, output: output_channel)
+        CommandLinePlayer.new(Nought, input: input_channel)
       end
 
-      it 'takes the coordinates of a point and creates a move' do
+      it 'takes the coordinates of a point "x, y" and creates a move' do
         allow(input_channel).to receive(:gets).and_return('0, 0')
 
         expect(human_player.get_move(grid)).to eq Move.new(Point.new(0, 0), Nought)
       end
 
-      it 'validates that the input received is a possible point location' do
-        allow(input_channel).to receive(:gets).and_return('0')
+      it 'allows coordinates without a seperating space' do
+        allow(input_channel).to receive(:gets).and_return('0,0')
 
-        expect { human_player.get_move(grid) }.to raise_error InvalidInputError
+        expect(human_player.get_move(grid)).to eq Move.new(Point.new(0, 0), Nought)
       end
 
-      it 'prints the grid and sends it to the output channel' do
-        allow(grid).to receive(:print).and_return(:grid_representation)
+      describe 'validations' do
+        it 'validates that the input received is coordinates x & y' do
+          allow(input_channel).to receive(:gets).and_return('0')
 
-        human_player.get_move(grid)
+          expect { human_player.get_move(grid) }.to raise_error InvalidInputError
+        end
 
-        expect(output_channel).to have_received(:puts).with(:grid_representation)
+        it 'validates that the input received is a number x & y' do
+          allow(input_channel).to receive(:gets).and_return('0, j')
+
+          expect { human_player.get_move(grid) }.to raise_error InvalidInputError
+        end
       end
     end
 
     describe ComputerPlayer do
       let(:computer_player) do
-        ComputerPlayer.new(Nought, input: input_channel, output: output_channel)
+        ComputerPlayer.new(Nought, input: input_channel)
       end
 
       it 'gets a move from IdealMove' do
