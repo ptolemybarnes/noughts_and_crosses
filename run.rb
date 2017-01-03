@@ -15,16 +15,21 @@ require './lib/game'
 require './lib/setup_players'
 require './lib/print_grid.rb'
 require './lib/print_numbered_grid.rb'
+require 'colorize'
 
 include NoughtsAndCrosses
 
 class Prompt
-
   def self.gets
     print '=> '
     STDIN.gets.chomp
   end
+end
 
+def colourize(output)
+  output
+    .gsub(/[1-9]/) {|char| char.light_black }
+    .gsub('X', 'X'.red)
 end
 
 setup = SetupPlayers.new
@@ -41,15 +46,15 @@ first_player, second_player = setup.players
 events = {
   game_start: Proc.new do |game_state|
     puts "\nGame starting!\n"
-    puts game_state.print
+    puts colourize(game_state.print)
   end,
   game_over: Proc.new do |game_state|
-    puts game_state.print
+    puts colourize(game_state.print)
     puts "Game over!"
   end,
   turn_change: Proc.new do |game_state|
     system("clear")
-    puts game_state.print
+    puts colourize(game_state.print)
   end,
   invalid_move: Proc.new do |game_state, error|
     puts "You can't go there!"
