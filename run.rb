@@ -13,6 +13,8 @@ require './lib/rank_cache'
 require './lib/ranker'
 require './lib/game'
 require './lib/setup_players'
+require './lib/print_grid.rb'
+require './lib/print_numbered_grid.rb'
 
 include NoughtsAndCrosses
 
@@ -54,7 +56,11 @@ events = {
   end
 }
 
-game = Game.new(first_player, second_player, events)
+class NumberedGrid < PrintGrid
+end
+
+game = Game.new(first_player, second_player, events, GameState.new(Grid.new(print_grid: PrintNumberedGrid)))
 until game.over?
   game.run
 end
+

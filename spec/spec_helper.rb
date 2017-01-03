@@ -13,6 +13,7 @@ require './lib/ranker'
 require './lib/game'
 require './lib/setup_players'
 require './lib/print_grid'
+require './lib/print_numbered_grid'
 require 'pry'
 require './spec/helpers'
 

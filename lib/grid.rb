@@ -5,7 +5,7 @@ module NoughtsAndCrosses
     FORWARD_DIAGONAL  = [Point.bottom_left, Point.middle, Point.top_right].freeze
     BACKWARD_DIAGONAL = [Point.top_left, Point.middle, Point.bottom_right].freeze
 
-    def initialize(moves = MovesList.new, print_grid = PrintGrid)
+    def initialize(moves: MovesList.new, print_grid: PrintGrid)
       @moves = moves
       @print_grid = print_grid
     end
@@ -25,7 +25,7 @@ module NoughtsAndCrosses
     end
 
     def print
-      @print_grid.call(rows)
+      @print_grid.call(print_rows)
     end
 
     def empty?
@@ -37,7 +37,7 @@ module NoughtsAndCrosses
     end
 
     def add(move)
-      Grid.new(moves.add(move), @print_grid)
+      Grid.new(moves: moves.add(move), print_grid: @print_grid)
     end
 
     private
@@ -54,6 +54,12 @@ module NoughtsAndCrosses
 
     def rotate(two_dimensional_array)
       two_dimensional_array.inject { |sum, row| sum.zip(row) }.map(&:flatten)
+    end
+
+    def print_rows
+      rows.map do |row|
+        row.map { |move| move.mark.to_s }.push("|\n").unshift("|")
+      end.push("-----\n").unshift("-----\n")
     end
   end
 end

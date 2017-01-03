@@ -10,11 +10,7 @@ module NoughtsAndCrosses
     end
 
     def call
-      "-----\n|" +
-        rows.map do |row|
-        row.map { |move| move.mark.to_s }
-      end.map(&:join).join("|\n|") +
-      "|\n-----\n"
+      rows.join
     end
 
     private
