@@ -1,11 +1,13 @@
 # allows iteration across the 3x3 grid of moves or empty cells
 module NoughtsAndCrosses
+
   class Grid
     FORWARD_DIAGONAL  = [Point.bottom_left, Point.middle, Point.top_right].freeze
     BACKWARD_DIAGONAL = [Point.top_left, Point.middle, Point.bottom_right].freeze
 
-    def initialize(moves = MovesList.new)
+    def initialize(moves = MovesList.new, print_grid = PrintGrid)
       @moves = moves
+      @print_grid = print_grid
     end
 
     def fetch(point)
@@ -23,11 +25,7 @@ module NoughtsAndCrosses
     end
 
     def print
-      "-----\n|" +
-        rows.map do |row|
-          row.map { |move| move.mark.to_s }
-        end.map(&:join).join("|\n|") +
-        "|\n-----\n"
+      @print_grid.call(rows)
     end
 
     def empty?
@@ -39,7 +37,7 @@ module NoughtsAndCrosses
     end
 
     def add(move)
-      Grid.new(moves.add(move))
+      Grid.new(moves.add(move), @print_grid)
     end
 
     private

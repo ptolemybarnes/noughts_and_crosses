@@ -12,6 +12,7 @@ require './lib/rank_cache'
 require './lib/ranker'
 require './lib/game'
 require './lib/setup_players'
+require './lib/print_grid'
 require 'pry'
 require './spec/helpers'
 
