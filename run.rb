@@ -41,7 +41,7 @@ game_types = {
     ComputerPlayer.new
   ],
   'Computer vs Human'    => [
-    CommandLinePlayer.new(input: numbered_input),
+    ComputerPlayer.new,
     CommandLinePlayer.new(input: numbered_input)
   ],
   'Computer vs Computer' => [
