@@ -95,12 +95,9 @@ events = {
   end
 }
 
-game = Game.new(
+Game.run(
   first_player,
   second_player,
   events,
   GameState.new(Grid.new(print_grid: PrintNumberedGrid))
 )
-until game.over?
-  game.run
-end

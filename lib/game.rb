@@ -6,6 +6,13 @@ module NoughtsAndCrosses
       @game_state = game_state
     end
 
+    def self.run(*args)
+      game = new(*args)
+      until game.over?
+        game.run
+      end
+    end
+
     def run
       begin
         _run
