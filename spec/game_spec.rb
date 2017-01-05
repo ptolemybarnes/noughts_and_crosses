@@ -23,17 +23,19 @@ module NoughtsAndCrosses
     end
 
     describe 'Game Events' do
-      let(:game_start_action)  { double(:game_start_action, call: nil) }
-      let(:game_over_action)   { double(:game_over_action, call: nil) }
-      let(:turn_change_action) { double(:turn_change_action, call: nil) }
-      let(:invalid_move_event) { double(:invalid_move_event, call: nil) }
+      let(:game_start_action)   { double(:game_start_action, call: nil) }
+      let(:game_over_action)    { double(:game_over_action, call: nil) }
+      let(:turn_change_action)  { double(:turn_change_action, call: nil) }
+      let(:invalid_move_event)  { double(:invalid_move_event, call: nil) }
+      let(:invalid_input_event) { double(:invalid_input_event, call: nil) }
 
       let(:events) do
         {
-          game_start:   Proc.new { game_start_action.call },
-          game_over:    Proc.new { game_over_action.call },
-          turn_change:  Proc.new { turn_change_action.call },
-          invalid_move: Proc.new { invalid_move_event.call }
+          game_start:   Proc.new  { game_start_action.call },
+          game_over:    Proc.new  { game_over_action.call },
+          turn_change:  Proc.new  { turn_change_action.call },
+          invalid_move: Proc.new  { invalid_move_event.call },
+          invalid_input: Proc.new { invalid_input_event.call }
         }
       end
 
@@ -82,6 +84,16 @@ module NoughtsAndCrosses
         2.times { game.run }
 
         expect(invalid_move_event).to have_received(:call)
+      end
+
+      it 'triggers an event when an invalid input is entered' do
+        x_player = instance_double(Player, get_move: nil)
+        o_player = instance_double(Player, get_move: nil)
+        allow(x_player).to receive(:get_move).and_raise(InvalidInputError)
+
+        Game.new(x_player, o_player, events).run
+
+        expect(invalid_input_event).to have_received(:call)
       end
     end
   end

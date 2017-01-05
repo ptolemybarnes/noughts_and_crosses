@@ -11,6 +11,8 @@ module NoughtsAndCrosses
         _run
       rescue YouCantGoThereError => e
         events[:invalid_move].call(game_state, e)
+      rescue InvalidInputError => e
+        events[:invalid_input].call(game_state, e)
       end
     end
 
