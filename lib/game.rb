@@ -16,6 +16,14 @@ module NoughtsAndCrosses
       end
     end
 
+    def over?
+      game_state.over?
+    end
+
+    private
+
+    attr_reader :players, :game_state, :events
+
     def _run
       if start_event = events[:game_start]
         start_event.call(game_state)
@@ -31,13 +39,5 @@ module NoughtsAndCrosses
       end
       self
     end
-
-    def over?
-      game_state.over?
-    end
-
-    private
-
-    attr_reader :players, :game_state, :events
   end
 end

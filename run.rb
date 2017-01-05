@@ -16,10 +16,20 @@ require './lib/setup_players'
 require './lib/print_grid.rb'
 require './lib/print_numbered_grid.rb'
 require './lib/numbered_input.rb'
+require './lib/prompt'
 require 'colorize'
 
 include NoughtsAndCrosses
-numbered_input = NumberedInput.new(STDIN)
+
+setup_prompt = Prompt.new do
+  print '=> '
+end
+
+player_move_prompt = Prompt.new do
+  puts 'Enter the number of an empty cell, 1 - 9'
+  print '=> '
+end
+numbered_input = NumberedInput.new(player_move_prompt)
 
 game_types = {
   'Human vs Human'       => [
@@ -40,13 +50,6 @@ game_types = {
   ]
 }
 
-class Prompt
-  def self.gets
-    print '=> '
-    STDIN.gets.chomp
-  end
-end
-
 def colourize(output)
   output
     .gsub(/[1-9]/) {|char| char.light_black }
@@ -57,7 +60,7 @@ setup = SetupPlayers.new(game_types)
 until setup.ready?
   begin
     puts setup.prompt
-    setup.call(Prompt.gets)
+    setup.call(setup_prompt.gets)
   rescue InvalidInputError
     puts "\nPlease enter a valid number!\n "
   end
@@ -79,14 +82,13 @@ events = {
   end,
   invalid_move: Proc.new do |game_state, error|
     puts "You can't go there!"
+  end,
+  invalid_input: Proc.new do |game_state, error|
+    puts 'Please enter a cell number, 1 - 9'
   end
 }
-
-class NumberedGrid < PrintGrid
-end
 
 game = Game.new(first_player, second_player, events, GameState.new(Grid.new(print_grid: PrintNumberedGrid)))
 until game.over?
   game.run
 end
-
