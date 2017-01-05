@@ -11,7 +11,9 @@ module NoughtsAndCrosses
     end
 
     def call
-      PrintGrid.call(grid).gsub(/[X0 ]/).with_index {|char, index| char == " " ? index.next : char }
+      PrintGrid.call(grid).gsub(/[X0 ]/).with_index do |char, index|
+        char == " " ? index.next : char
+      end
     end
   end
 end

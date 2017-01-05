@@ -74,7 +74,14 @@ events = {
   end,
   game_over: Proc.new do |game_state|
     puts colourize(game_state.print)
-    puts "Game over!"
+    if game_state.won_by?(Nought)
+      outcome = '0 was the winner.'
+    elsif game_state.won_by?(Cross)
+      outcome = 'X was the winner.'
+    else
+      outcome = 'It was a tie.'
+    end
+    puts "Game over! #{outcome}"
   end,
   turn_change: Proc.new do |game_state|
     system("clear")
@@ -84,11 +91,16 @@ events = {
     puts "You can't go there!"
   end,
   invalid_input: Proc.new do |game_state, error|
-    puts 'Please enter a cell number, 1 - 9'
+    puts "That's not a valid cell number!"
   end
 }
 
-game = Game.new(first_player, second_player, events, GameState.new(Grid.new(print_grid: PrintNumberedGrid)))
+game = Game.new(
+  first_player,
+  second_player,
+  events,
+  GameState.new(Grid.new(print_grid: PrintNumberedGrid))
+)
 until game.over?
   game.run
 end

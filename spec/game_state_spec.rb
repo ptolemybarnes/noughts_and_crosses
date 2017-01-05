@@ -141,7 +141,6 @@ module NoughtsAndCrosses
         EXAMPLE
         )
 
-
         expect do
           game.play(Move.new(Point.top_left, Nought))
         end.to raise_error(YouCantGoThereError)
