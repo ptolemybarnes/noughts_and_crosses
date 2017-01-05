@@ -15,9 +15,30 @@ require './lib/game'
 require './lib/setup_players'
 require './lib/print_grid.rb'
 require './lib/print_numbered_grid.rb'
+require './lib/numbered_input.rb'
 require 'colorize'
 
 include NoughtsAndCrosses
+numbered_input = NumberedInput.new(STDIN)
+
+game_types = {
+  'Human vs Human'       => [
+    CommandLinePlayer.new(input: numbered_input),
+    CommandLinePlayer.new(input: numbered_input)
+  ],
+  'Human vs Computer'    => [
+    CommandLinePlayer.new(input: numbered_input),
+    ComputerPlayer.new
+  ],
+  'Computer vs Human'    => [
+    CommandLinePlayer.new(input: numbered_input),
+    CommandLinePlayer.new(input: numbered_input)
+  ],
+  'Computer vs Computer' => [
+    ComputerPlayer.new,
+    ComputerPlayer.new
+  ]
+}
 
 class Prompt
   def self.gets
@@ -32,7 +53,7 @@ def colourize(output)
     .gsub('X', 'X'.red)
 end
 
-setup = SetupPlayers.new
+setup = SetupPlayers.new(game_types)
 until setup.ready?
   begin
     puts setup.prompt

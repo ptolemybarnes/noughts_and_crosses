@@ -1,6 +1,8 @@
 module NoughtsAndCrosses
   class Player
-    def initialize(mark, input: STDIN)
+    attr_accessor :mark
+
+    def initialize(mark = nil, input: STDIN)
       @mark  = mark
       @input = input
     end
@@ -8,9 +10,13 @@ module NoughtsAndCrosses
     def get_move(game)
     end
 
+    def ready?
+      !mark.nil?
+    end
+
     private
 
-    attr_reader :mark, :input
+    attr_reader :input
   end
 
   class CommandLinePlayer < Player

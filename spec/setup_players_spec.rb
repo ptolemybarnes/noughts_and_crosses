@@ -1,7 +1,15 @@
 module NoughtsAndCrosses
   describe SetupPlayers do
 
-    subject(:setup) { described_class.new }
+    subject(:setup) { described_class.new(game_types) }
+    let(:game_types) do
+      {
+        'Human vs Human'       => [ CommandLinePlayer.new, CommandLinePlayer.new ],
+        'Human vs Computer'    => [ CommandLinePlayer.new, ComputerPlayer.new ],
+        'Computer vs Human'    => [ ComputerPlayer.new, CommandLinePlayer.new ],
+        'Computer vs Computer' => [ ComputerPlayer.new, ComputerPlayer.new ]
+      }
+    end
 
     it { is_expected.to_not be_ready }
 
